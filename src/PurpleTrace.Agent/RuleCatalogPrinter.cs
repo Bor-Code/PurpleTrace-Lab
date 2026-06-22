@@ -27,6 +27,32 @@ public static class RuleCatalogPrinter
             Console.WriteLine($"  Tactic: {rule.MitreTactic}");
             Console.WriteLine($"  Technique: {rule.MitreTechniqueName}");
             Console.WriteLine($"  Description: {rule.Description}");
+
+            if (!string.IsNullOrWhiteSpace(rule.Author))
+            {
+                Console.WriteLine($"  Author: {rule.Author}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(rule.CreatedUtc))
+            {
+                Console.WriteLine($"  Created UTC: {rule.CreatedUtc}");
+            }
+
+            if (rule.Tags.Count > 0)
+            {
+                Console.WriteLine($"  Tags: {string.Join(", ", rule.Tags)}");
+            }
+
+            if (rule.References.Count > 0)
+            {
+                Console.WriteLine("  References:");
+
+                foreach (var reference in rule.References)
+                {
+                    Console.WriteLine($"    - {reference}");
+                }
+            }
+
             Console.WriteLine();
         }
     }
