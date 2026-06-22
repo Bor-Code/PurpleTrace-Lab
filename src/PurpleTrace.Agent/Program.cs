@@ -2,6 +2,11 @@ using System.Text.Json;
 using PurpleTrace.Agent.Detection;
 using PurpleTrace.Agent.Models;
 
+var rulesDirectory = ResolveRulesDirectory();
+
+var loader = new RuleLoader();
+var rules = loader.LoadFromDirectory(rulesDirectory);
+
 var endpointEvent = new EndpointEvent
 {
     Source = "Sysmon",
@@ -18,51 +23,6 @@ var endpointEvent = new EndpointEvent
     ParentCommandLine = "cmd.exe"
 };
 
-var rules = new List<DetectionRule>
-{
-    new DetectionRule
-    {
-        Id = "PT-RULE-001",
-        Title = "Suspicious PowerShell Execution",
-        Description = "PowerShell executed with suspicious command-line arguments.",
-        Severity = "High",
-        MitreTactic = "Execution",
-        MitreTechniqueId = "T1059.001",
-        MitreTechniqueName = "PowerShell",
-        ProcessNameContains = new List<string>
-        {
-            "powershell.exe",
-            "pwsh.exe"
-        },
-        CommandLineContains = new List<string>
-        {
-            "-NoProfile",
-            "ExecutionPolicy Bypass",
-            "-enc",
-            "-nop"
-        }
-    },
-
-    new DetectionRule
-    {
-        Id = "PT-RULE-002",
-        Title = "Command Shell Started PowerShell",
-        Description = "PowerShell was launched from cmd.exe, which may indicate scripted execution.",
-        Severity = "Medium",
-        MitreTactic = "Execution",
-        MitreTechniqueId = "T1059",
-        MitreTechniqueName = "Command and Scripting Interpreter",
-        ProcessNameContains = new List<string>
-        {
-            "powershell.exe"
-        },
-        ParentProcessNameContains = new List<string>
-        {
-            "cmd.exe"
-        }
-    }
-};
-
 var engine = new DetectionEngine(rules);
 var alerts = engine.Analyze(endpointEvent);
 
@@ -71,6 +31,35 @@ var options = new JsonSerializerOptions
     WriteIndented = true
 };
 
-Console.WriteLine("PurpleTrace Agent - Detection Engine Test");
+Console.WriteLine("PurpleTrace Agent - JSON Rule Loader Test");
+Console.WriteLine();
+Console.WriteLine($"Loaded rules: {rules.Count}");
+Console.WriteLine($"Generated alerts: {alerts.Count}");
 Console.WriteLine();
 Console.WriteLine(JsonSerializer.Serialize(alerts, options));
+
+static string ResolveRulesDirectory()
+{
+    var currentDirectory = Directory.GetCurrentDirectory();
+
+    while (!string.IsNullOrWhiteSpace(currentDirectory))
+    {
+        var candidate = Path.Combine(currentDirectory, "rules");
+
+        if (Directory.Exists(candidate))
+        {
+            return candidate;
+        }
+
+        var parent = Directory.GetParent(currentDirectory);
+
+        if (parent is null)
+        {
+            break;
+        }
+
+        currentDirectory = parent.FullName;
+    }
+
+    throw new DirectoryNotFoundException("Could not locate the rules directory.");
+}
