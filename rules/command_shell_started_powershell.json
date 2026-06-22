@@ -1,13 +1,25 @@
 {
   "Id": "PT-RULE-002",
   "Title": "Command Shell Started PowerShell",
-  "Description": "PowerShell was launched from cmd.exe, which may indicate scripted execution.",
+  "Description": "Detects PowerShell launched from the Windows command shell.",
   "Severity": "Medium",
   "MitreTactic": "Execution",
   "MitreTechniqueId": "T1059",
   "MitreTechniqueName": "Command and Scripting Interpreter",
+  "Author": "PurpleTrace Lab",
+  "CreatedUtc": "2026-06-22T00:00:00Z",
+  "Tags": [
+    "powershell",
+    "cmd",
+    "execution",
+    "windows"
+  ],
+  "References": [
+    "MITRE ATT&CK T1059 - Command and Scripting Interpreter"
+  ],
   "ProcessNameContains": [
-    "powershell.exe"
+    "powershell.exe",
+    "pwsh.exe"
   ],
   "CommandLineContains": [],
   "ParentProcessNameContains": [

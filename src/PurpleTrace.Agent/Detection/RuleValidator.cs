@@ -15,6 +15,12 @@ public static class RuleValidator
     {
         var result = new RuleValidationResult();
 
+        rule.Tags ??= new List<string>();
+        rule.References ??= new List<string>();
+        rule.ProcessNameContains ??= new List<string>();
+        rule.CommandLineContains ??= new List<string>();
+        rule.ParentProcessNameContains ??= new List<string>();
+
         if (string.IsNullOrWhiteSpace(rule.Id))
         {
             result.AddError("Rule Id is required.");

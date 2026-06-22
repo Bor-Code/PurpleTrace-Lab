@@ -1,11 +1,22 @@
 {
   "Id": "PT-RULE-001",
   "Title": "Suspicious PowerShell Execution",
-  "Description": "PowerShell executed with suspicious command-line arguments.",
+  "Description": "Detects PowerShell execution with suspicious command-line arguments.",
   "Severity": "High",
   "MitreTactic": "Execution",
   "MitreTechniqueId": "T1059.001",
   "MitreTechniqueName": "PowerShell",
+  "Author": "PurpleTrace Lab",
+  "CreatedUtc": "2026-06-22T00:00:00Z",
+  "Tags": [
+    "powershell",
+    "execution",
+    "windows",
+    "command-line"
+  ],
+  "References": [
+    "MITRE ATT&CK T1059.001 - PowerShell"
+  ],
   "ProcessNameContains": [
     "powershell.exe",
     "pwsh.exe"

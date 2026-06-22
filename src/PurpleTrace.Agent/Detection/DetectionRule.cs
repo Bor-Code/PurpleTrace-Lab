@@ -11,6 +11,12 @@ public sealed class DetectionRule
     public string MitreTechniqueId { get; set; } = string.Empty;
     public string MitreTechniqueName { get; set; } = string.Empty;
 
+    public string Author { get; set; } = "PurpleTrace Lab";
+    public string CreatedUtc { get; set; } = string.Empty;
+
+    public List<string> Tags { get; set; } = new();
+    public List<string> References { get; set; } = new();
+
     public List<string> ProcessNameContains { get; set; } = new();
     public List<string> CommandLineContains { get; set; } = new();
     public List<string> ParentProcessNameContains { get; set; } = new();
