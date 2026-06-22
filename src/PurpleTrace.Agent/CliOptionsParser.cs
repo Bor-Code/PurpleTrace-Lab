@@ -19,6 +19,13 @@ public static class CliOptionsParser
                 continue;
             }
 
+            if (current.Equals("--event", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+            {
+                options.EventPath = args[i + 1];
+                i++;
+                continue;
+            }
+
             if (current.Equals("--out", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 options.OutputPath = args[i + 1];
