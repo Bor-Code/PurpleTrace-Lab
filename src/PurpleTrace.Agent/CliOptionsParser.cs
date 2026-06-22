@@ -8,6 +8,13 @@ public static class CliOptionsParser
     {
         var options = new CliOptions();
 
+        ApplyCommandLineOverrides(options, args);
+
+        return options;
+    }
+
+    public static void ApplyCommandLineOverrides(CliOptions options, string[] args)
+    {
         for (var i = 0; i < args.Length; i++)
         {
             var current = args[i];
@@ -93,7 +100,5 @@ public static class CliOptionsParser
                 continue;
             }
         }
-
-        return options;
     }
 }
