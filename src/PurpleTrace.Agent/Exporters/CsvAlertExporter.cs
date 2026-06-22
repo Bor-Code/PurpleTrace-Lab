@@ -16,7 +16,7 @@ public sealed class CsvAlertExporter
 
         var builder = new StringBuilder();
 
-        builder.AppendLine("TimestampUtc,RuleId,RuleName,Severity,MitreTactic,MitreTechniqueId,MitreTechniqueName,Hostname,ProcessName,CommandLine,Reason");
+        builder.AppendLine("TimestampUtc,RuleId,RuleName,Severity,MitreTactic,MitreTechniqueId,MitreTechniqueName,RuleAuthor,RuleCreatedUtc,RuleTags,RuleReferences,Hostname,ProcessName,CommandLine,Reason");
 
         foreach (var alert in alerts)
         {
@@ -28,6 +28,10 @@ public sealed class CsvAlertExporter
                 Escape(alert.MitreTactic),
                 Escape(alert.MitreTechniqueId),
                 Escape(alert.MitreTechniqueName),
+                Escape(alert.RuleAuthor),
+                Escape(alert.RuleCreatedUtc),
+                Escape(string.Join(";", alert.RuleTags)),
+                Escape(string.Join(";", alert.RuleReferences)),
                 Escape(alert.Hostname),
                 Escape(alert.ProcessName),
                 Escape(alert.CommandLine),

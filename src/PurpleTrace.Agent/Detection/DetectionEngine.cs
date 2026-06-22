@@ -80,7 +80,11 @@ public sealed class DetectionEngine
             ProcessName = endpointEvent.ProcessName,
             CommandLine = endpointEvent.CommandLine,
             Reason = rule.Description,
-            SourceEvent = endpointEvent
+            SourceEvent = endpointEvent,
+            RuleAuthor = rule.Author,
+            RuleCreatedUtc = rule.CreatedUtc,
+            RuleTags = rule.Tags.ToList(),
+            RuleReferences = rule.References.ToList(),
         };
     }
 }
