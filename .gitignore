@@ -19,3 +19,5 @@ samples/*.local.json
 samples/*.local.md
 
 samples/*.local.csv
+
+samples/*.local.html
