@@ -2,7 +2,7 @@
 > [!CAUTION]
 > # ⛔🚨 WARNING 🚨⛔
 > ## 🔴 UNDER DEVELOPMENT — PLEASE DO NOT USE! 🔴
-> ### ❌ REVIEW ONLY AND SHARE YOUR THOUGHTS ❌ &lt;3
+> ### ❌ REVIEW ONLY AND SHARE YOUR THOUGHTS &lt;3 ❌ 
 
 # PurpleTrace Lab
 
