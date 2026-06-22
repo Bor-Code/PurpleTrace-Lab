@@ -30,21 +30,78 @@ public sealed class MarkdownReportExporter
             return;
         }
 
+        AppendSeveritySummary(builder, alertList);
+        AppendMitreSummary(builder, alertList);
+        AppendAlertSummary(builder, alertList);
+        AppendAlertDetails(builder, alertList);
+
+        File.WriteAllText(outputPath, builder.ToString());
+    }
+
+    private static void AppendSeveritySummary(StringBuilder builder, List<DetectionAlert> alerts)
+    {
+        builder.AppendLine("## Severity Summary");
+        builder.AppendLine();
+        builder.AppendLine("| Severity | Count |");
+        builder.AppendLine("|---|---|");
+
+        var severityGroups = alerts
+            .GroupBy(alert => alert.Severity)
+            .OrderByDescending(group => GetSeverityRank(group.Key))
+            .ThenBy(group => group.Key);
+
+        foreach (var group in severityGroups)
+        {
+            builder.AppendLine($"| {group.Key} | {group.Count()} |");
+        }
+
+        builder.AppendLine();
+    }
+
+    private static void AppendMitreSummary(StringBuilder builder, List<DetectionAlert> alerts)
+    {
+        builder.AppendLine("## MITRE Technique Summary");
+        builder.AppendLine();
+        builder.AppendLine("| Technique ID | Technique Name | Count |");
+        builder.AppendLine("|---|---|---|");
+
+        var mitreGroups = alerts
+            .GroupBy(alert => new
+            {
+                alert.MitreTechniqueId,
+                alert.MitreTechniqueName
+            })
+            .OrderBy(group => group.Key.MitreTechniqueId);
+
+        foreach (var group in mitreGroups)
+        {
+            builder.AppendLine($"| {group.Key.MitreTechniqueId} | {group.Key.MitreTechniqueName} | {group.Count()} |");
+        }
+
+        builder.AppendLine();
+    }
+
+    private static void AppendAlertSummary(StringBuilder builder, List<DetectionAlert> alerts)
+    {
         builder.AppendLine("## Alert Summary");
         builder.AppendLine();
         builder.AppendLine("| Rule ID | Rule Name | Severity | MITRE Technique | Process |");
         builder.AppendLine("|---|---|---|---|---|");
 
-        foreach (var alert in alertList)
+        foreach (var alert in alerts.OrderByDescending(alert => GetSeverityRank(alert.Severity)).ThenBy(alert => alert.RuleId))
         {
             builder.AppendLine($"| {alert.RuleId} | {alert.RuleName} | {alert.Severity} | {alert.MitreTechniqueId} {alert.MitreTechniqueName} | {alert.ProcessName} |");
         }
 
         builder.AppendLine();
+    }
+
+    private static void AppendAlertDetails(StringBuilder builder, List<DetectionAlert> alerts)
+    {
         builder.AppendLine("## Alert Details");
         builder.AppendLine();
 
-        foreach (var alert in alertList)
+        foreach (var alert in alerts.OrderByDescending(alert => GetSeverityRank(alert.Severity)).ThenBy(alert => alert.RuleId))
         {
             builder.AppendLine($"### {alert.RuleId} - {alert.RuleName}");
             builder.AppendLine();
@@ -69,7 +126,18 @@ public sealed class MarkdownReportExporter
                 builder.AppendLine();
             }
         }
+    }
 
-        File.WriteAllText(outputPath, builder.ToString());
+    private static int GetSeverityRank(string severity)
+    {
+        return severity.ToLowerInvariant() switch
+        {
+            "critical" => 5,
+            "high" => 4,
+            "medium" => 3,
+            "low" => 2,
+            "informational" => 1,
+            _ => 0
+        };
     }
 }
