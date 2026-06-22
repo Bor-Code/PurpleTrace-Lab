@@ -33,6 +33,13 @@ public static class CliOptionsParser
                 continue;
             }
 
+            if (current.Equals("--report", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+            {
+                options.ReportPath = args[i + 1];
+                i++;
+                continue;
+            }
+
             if (current.Equals("--source", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 options.Source = args[i + 1];

@@ -9,6 +9,7 @@ var cliOptions = CliOptionsParser.Parse(args);
 
 var rulesDirectory = ResolvePath(cliOptions.RulesDirectory);
 var outputPath = ResolvePath(cliOptions.OutputPath);
+var reportPath = ResolvePath(cliOptions.ReportPath);
 
 var ruleLoader = new RuleLoader();
 var rules = ruleLoader.LoadFromDirectory(rulesDirectory);
@@ -23,19 +24,23 @@ foreach (var endpointEvent in endpointEvents)
     alerts.AddRange(engine.Analyze(endpointEvent));
 }
 
-var exporter = new JsonAlertExporter();
-exporter.Export(outputPath, alerts);
+var jsonExporter = new JsonAlertExporter();
+jsonExporter.Export(outputPath, alerts);
+
+var markdownExporter = new MarkdownReportExporter();
+markdownExporter.Export(reportPath, alerts);
 
 var options = new JsonSerializerOptions
 {
     WriteIndented = true
 };
 
-Console.WriteLine("PurpleTrace Agent - Sysmon Detection Pipeline");
+Console.WriteLine("PurpleTrace Agent - Detection Pipeline");
 Console.WriteLine();
 Console.WriteLine($"Source: {cliOptions.Source}");
 Console.WriteLine($"Rules directory: {rulesDirectory}");
-Console.WriteLine($"Output path: {outputPath}");
+Console.WriteLine($"JSON output path: {outputPath}");
+Console.WriteLine($"Markdown report path: {reportPath}");
 Console.WriteLine($"Loaded rules: {rules.Count}");
 Console.WriteLine($"Loaded events: {endpointEvents.Count}");
 Console.WriteLine($"Generated alerts: {alerts.Count}");
@@ -62,6 +67,7 @@ static List<EndpointEvent> LoadEndpointEvents(CliOptions cliOptions)
 
     var eventPath = ResolvePath(cliOptions.EventPath);
     var loader = new EndpointEventLoader();
+
     return new List<EndpointEvent>
     {
         loader.LoadFromJsonFile(eventPath)
