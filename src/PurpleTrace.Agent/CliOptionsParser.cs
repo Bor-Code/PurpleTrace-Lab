@@ -20,6 +20,12 @@ public static class CliOptionsParser
                 continue;
             }
 
+            if (current.Equals("--list-rules", StringComparison.OrdinalIgnoreCase))
+            {
+                options.ListRules = true;
+                continue;
+            }
+
             if (current.Equals("--config", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 options.ConfigPath = args[i + 1];
