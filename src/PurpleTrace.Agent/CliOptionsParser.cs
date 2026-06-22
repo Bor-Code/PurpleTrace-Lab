@@ -39,6 +39,15 @@ public static class CliOptionsParser
                 continue;
             }
 
+            if ((current.Equals("--export-rule-coverage", StringComparison.OrdinalIgnoreCase) ||
+                 current.Equals("--rule-coverage", StringComparison.OrdinalIgnoreCase)) && i + 1 < args.Length)
+            {
+                options.ExportRuleCoverage = true;
+                options.RuleCoveragePath = args[i + 1];
+                i++;
+                continue;
+            }
+
             if (current.Equals("--config", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 options.ConfigPath = args[i + 1];
