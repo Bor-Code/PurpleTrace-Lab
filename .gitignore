@@ -1,0 +1,15 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+*.log
+
+# Build outputs
+Debug/
+Release/
+
+# OS files
+.DS_Store
+Thumbs.db
