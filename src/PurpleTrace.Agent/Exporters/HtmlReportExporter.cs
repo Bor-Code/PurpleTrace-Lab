@@ -31,6 +31,7 @@ public sealed class HtmlReportExporter
         builder.AppendLine("    .header, .card, .alert { background: #111827; border: 1px solid #334155; border-radius: 16px; padding: 20px; margin-bottom: 18px; }");
         builder.AppendLine("    h1 { color: #c084fc; margin-bottom: 8px; }");
         builder.AppendLine("    h2 { color: #93c5fd; margin-top: 32px; }");
+        builder.AppendLine("    h3 { color: #f9fafb; }");
         builder.AppendLine("    table { width: 100%; border-collapse: collapse; background: #111827; border: 1px solid #334155; margin-bottom: 22px; }");
         builder.AppendLine("    th, td { padding: 12px; border-bottom: 1px solid #334155; text-align: left; vertical-align: top; }");
         builder.AppendLine("    th { color: #c4b5fd; background: #1e293b; }");
@@ -38,6 +39,8 @@ public sealed class HtmlReportExporter
         builder.AppendLine("    .metric { font-size: 32px; font-weight: bold; }");
         builder.AppendLine("    .label { color: #94a3b8; }");
         builder.AppendLine("    .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #312e81; color: #ddd6fe; margin: 3px; font-size: 13px; }");
+        builder.AppendLine("    .evidence { background: #020617; border: 1px solid #334155; border-radius: 12px; padding: 14px; margin-top: 14px; }");
+        builder.AppendLine("    .evidence-title { color: #facc15; font-weight: bold; margin-bottom: 8px; }");
         builder.AppendLine("    code { background: #020617; border: 1px solid #334155; padding: 4px 7px; border-radius: 6px; color: #bfdbfe; }");
         builder.AppendLine("    .muted { color: #94a3b8; }");
         builder.AppendLine("  </style>");
@@ -52,7 +55,7 @@ public sealed class HtmlReportExporter
         builder.AppendLine($"<div class=\"card\"><div class=\"metric\">{alertList.Count}</div><div class=\"label\">Total Alerts</div></div>");
         builder.AppendLine($"<div class=\"card\"><div class=\"metric\">{CountBySeverity(alertList, "High")}</div><div class=\"label\">High Alerts</div></div>");
         builder.AppendLine($"<div class=\"card\"><div class=\"metric\">{CountBySeverity(alertList, "Medium")}</div><div class=\"label\">Medium Alerts</div></div>");
-        builder.AppendLine($"<div class=\"card\"><div class=\"metric\">{alertList.Select(alert => alert.MitreTechniqueId).Distinct().Count()}</div><div class=\"label\">MITRE Techniques</div></div>");
+        builder.AppendLine($"<div class=\"card\"><div class=\"metric\">{alertList.Select(alert => alert.MitreTechniqueId).Where(id => !string.IsNullOrWhiteSpace(id)).Distinct(StringComparer.OrdinalIgnoreCase).Count()}</div><div class=\"label\">MITRE Techniques</div></div>");
         builder.AppendLine("</div>");
         builder.AppendLine("</div>");
 
@@ -112,11 +115,11 @@ public sealed class HtmlReportExporter
     {
         builder.AppendLine("<h2>Alert Summary</h2>");
         builder.AppendLine("<table>");
-        builder.AppendLine("<tr><th>Rule</th><th>Severity</th><th>MITRE</th><th>Process</th></tr>");
+        builder.AppendLine("<tr><th>Rule</th><th>Severity</th><th>MITRE</th><th>Process</th><th>Evidence</th></tr>");
 
         foreach (var alert in alerts.OrderByDescending(alert => SeverityRanker.GetRank(alert.Severity)).ThenBy(alert => alert.RuleId))
         {
-            builder.AppendLine($"<tr><td>{Encode(alert.RuleId)} - {Encode(alert.RuleName)}</td><td>{Encode(alert.Severity)}</td><td>{Encode(alert.MitreTechniqueId)}</td><td>{Encode(alert.ProcessName)}</td></tr>");
+            builder.AppendLine($"<tr><td>{Encode(alert.RuleId)} - {Encode(alert.RuleName)}</td><td>{Encode(alert.Severity)}</td><td>{Encode(alert.MitreTechniqueId)}</td><td>{Encode(alert.ProcessName)}</td><td>{Encode(alert.EvidenceSummary)}</td></tr>");
         }
 
         builder.AppendLine("</table>");
@@ -133,44 +136,90 @@ public sealed class HtmlReportExporter
             builder.AppendLine($"<p><strong>Severity:</strong> {Encode(alert.Severity)}</p>");
             builder.AppendLine($"<p><strong>MITRE:</strong> {Encode(alert.MitreTechniqueId)} - {Encode(alert.MitreTechniqueName)}</p>");
             builder.AppendLine($"<p><strong>Hostname:</strong> {Encode(alert.Hostname)}</p>");
+            builder.AppendLine($"<p><strong>User:</strong> {Encode(alert.UserName)}</p>");
             builder.AppendLine($"<p><strong>Process:</strong> {Encode(alert.ProcessName)}</p>");
+            builder.AppendLine($"<p><strong>Parent Process:</strong> {Encode(alert.ParentProcessName)}</p>");
             builder.AppendLine($"<p><strong>Command Line:</strong> <code>{Encode(alert.CommandLine)}</code></p>");
             builder.AppendLine($"<p><strong>Reason:</strong> {Encode(alert.Reason)}</p>");
 
-            if (!string.IsNullOrWhiteSpace(alert.RuleAuthor))
-            {
-                builder.AppendLine($"<p><strong>Rule Author:</strong> {Encode(alert.RuleAuthor)}</p>");
-            }
-
-            if (!string.IsNullOrWhiteSpace(alert.RuleCreatedUtc))
-            {
-                builder.AppendLine($"<p><strong>Rule Created UTC:</strong> {Encode(alert.RuleCreatedUtc)}</p>");
-            }
-
-            if (alert.RuleTags.Count > 0)
-            {
-                builder.AppendLine("<p><strong>Tags:</strong></p>");
-
-                foreach (var tag in alert.RuleTags)
-                {
-                    builder.AppendLine($"<span class=\"badge\">{Encode(tag)}</span>");
-                }
-            }
-
-            if (alert.RuleReferences.Count > 0)
-            {
-                builder.AppendLine("<p><strong>References:</strong></p>");
-                builder.AppendLine("<ul>");
-
-                foreach (var reference in alert.RuleReferences)
-                {
-                    builder.AppendLine($"<li>{Encode(reference)}</li>");
-                }
-
-                builder.AppendLine("</ul>");
-            }
+            AppendEvidence(builder, alert);
+            AppendRuleMetadata(builder, alert);
 
             builder.AppendLine("</div>");
+        }
+    }
+
+    private static void AppendEvidence(StringBuilder builder, DetectionAlert alert)
+    {
+        if (string.IsNullOrWhiteSpace(alert.EvidenceSummary) &&
+            alert.MatchedFields.Count == 0 &&
+            alert.MatchedValues.Count == 0)
+        {
+            return;
+        }
+
+        builder.AppendLine("<div class=\"evidence\">");
+        builder.AppendLine("<div class=\"evidence-title\">Detection Evidence</div>");
+
+        if (!string.IsNullOrWhiteSpace(alert.EvidenceSummary))
+        {
+            builder.AppendLine($"<p><strong>Evidence Summary:</strong> {Encode(alert.EvidenceSummary)}</p>");
+        }
+
+        if (alert.MatchedFields.Count > 0)
+        {
+            builder.AppendLine($"<p><strong>Matched Fields:</strong> {Encode(string.Join(", ", alert.MatchedFields))}</p>");
+        }
+
+        if (alert.MatchedValues.Count > 0)
+        {
+            builder.AppendLine("<p><strong>Matched Values:</strong></p>");
+            builder.AppendLine("<ul>");
+
+            foreach (var matchedValue in alert.MatchedValues)
+            {
+                builder.AppendLine($"<li>{Encode(matchedValue)}</li>");
+            }
+
+            builder.AppendLine("</ul>");
+        }
+
+        builder.AppendLine("</div>");
+    }
+
+    private static void AppendRuleMetadata(StringBuilder builder, DetectionAlert alert)
+    {
+        if (!string.IsNullOrWhiteSpace(alert.RuleAuthor))
+        {
+            builder.AppendLine($"<p><strong>Rule Author:</strong> {Encode(alert.RuleAuthor)}</p>");
+        }
+
+        if (!string.IsNullOrWhiteSpace(alert.RuleCreatedUtc))
+        {
+            builder.AppendLine($"<p><strong>Rule Created UTC:</strong> {Encode(alert.RuleCreatedUtc)}</p>");
+        }
+
+        if (alert.RuleTags.Count > 0)
+        {
+            builder.AppendLine("<p><strong>Tags:</strong></p>");
+
+            foreach (var tag in alert.RuleTags)
+            {
+                builder.AppendLine($"<span class=\"badge\">{Encode(tag)}</span>");
+            }
+        }
+
+        if (alert.RuleReferences.Count > 0)
+        {
+            builder.AppendLine("<p><strong>References:</strong></p>");
+            builder.AppendLine("<ul>");
+
+            foreach (var reference in alert.RuleReferences)
+            {
+                builder.AppendLine($"<li>{Encode(reference)}</li>");
+            }
+
+            builder.AppendLine("</ul>");
         }
     }
 
