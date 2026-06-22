@@ -4,6 +4,7 @@ public sealed class EndpointEvent
 {
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public DateTime TimestampUtc { get; set; } = DateTime.UtcNow;
+
     public string Source { get; set; } = string.Empty;
     public int EventId { get; set; }
     public EndpointEventType EventType { get; set; } = EndpointEventType.Unknown;
