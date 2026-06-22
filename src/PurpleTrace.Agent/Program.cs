@@ -73,10 +73,7 @@ static List<EndpointEvent> LoadEndpointEvents(CliOptions cliOptions)
     var eventPath = ResolvePath(cliOptions.EventPath);
     var loader = new EndpointEventLoader();
 
-    return new List<EndpointEvent>
-    {
-        loader.LoadFromJsonFile(eventPath)
-    };
+    return loader.LoadManyFromJsonFile(eventPath);
 }
 
 static string ResolvePath(string path)
