@@ -39,6 +39,7 @@ var rulesDirectory = ResolvePath(cliOptions.RulesDirectory);
 var outputPath = ResolvePath(cliOptions.OutputPath);
 var reportPath = ResolvePath(cliOptions.ReportPath);
 var csvPath = ResolvePath(cliOptions.CsvPath);
+var htmlPath = ResolvePath(cliOptions.HtmlPath);
 
 var ruleLoader = new RuleLoader();
 List<DetectionRule> rules;
@@ -95,6 +96,9 @@ markdownExporter.Export(reportPath, alerts);
 var csvExporter = new CsvAlertExporter();
 csvExporter.Export(csvPath, alerts);
 
+var htmlExporter = new HtmlReportExporter();
+htmlExporter.Export(htmlPath, alerts);
+
 var options = new JsonSerializerOptions
 {
     WriteIndented = true
@@ -107,6 +111,7 @@ Console.WriteLine($"Rules directory: {rulesDirectory}");
 Console.WriteLine($"JSON output path: {outputPath}");
 Console.WriteLine($"Markdown report path: {reportPath}");
 Console.WriteLine($"CSV output path: {csvPath}");
+Console.WriteLine($"HTML report path: {htmlPath}");
 Console.WriteLine($"Loaded rules: {rules.Count}");
 Console.WriteLine($"Loaded events: {endpointEvents.Count}");
 Console.WriteLine($"Detected alerts before filtering: {detectedAlerts.Count}");
@@ -136,6 +141,7 @@ static void ApplyConfigIfProvided(CliOptions cliOptions)
     cliOptions.OutputPath = config.OutputPath;
     cliOptions.ReportPath = config.ReportPath;
     cliOptions.CsvPath = config.CsvPath;
+    cliOptions.HtmlPath = config.HtmlPath;
     cliOptions.Source = config.Source;
     cliOptions.MinSeverity = config.MinSeverity;
     cliOptions.MaxEvents = config.MaxEvents;

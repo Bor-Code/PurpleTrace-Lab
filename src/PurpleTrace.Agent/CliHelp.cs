@@ -10,7 +10,7 @@ public static class CliHelp
         Console.WriteLine("  PurpleTrace.Agent --config config/purpletrace.sample.json");
         Console.WriteLine("  PurpleTrace.Agent --list-rules --rules rules");
         Console.WriteLine("  PurpleTrace.Agent --validate-rules --rules rules");
-        Console.WriteLine("  PurpleTrace.Agent --source sample --rules rules --event samples/sample-powershell-event.json --out samples/alerts.local.json --report samples/report.local.md --csv samples/alerts.local.csv");
+        Console.WriteLine("  PurpleTrace.Agent --source sample --rules rules --event samples/sample-powershell-event.json --out samples/alerts.local.json --report samples/report.local.md --csv samples/alerts.local.csv --html samples/report.local.html");
         Console.WriteLine();
         Console.WriteLine("Options:");
         Console.WriteLine("  --config          JSON config file path");
@@ -22,6 +22,7 @@ public static class CliHelp
         Console.WriteLine("  --out             JSON alert output path");
         Console.WriteLine("  --report          Markdown report output path");
         Console.WriteLine("  --csv             CSV alert output path");
+        Console.WriteLine("  --html            HTML report output path");
         Console.WriteLine("  --min-severity    Minimum alert severity to export. Values: Critical, High, Medium, Low, Informational");
         Console.WriteLine("  --max             Maximum Sysmon events to read");
         Console.WriteLine("  --help            Show help");
@@ -30,6 +31,6 @@ public static class CliHelp
         Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --config config/purpletrace.sample.json");
         Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --list-rules --rules rules");
         Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --validate-rules --rules rules");
-        Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --source sample --rules rules --event samples/sample-event-batch.json --out samples/batch-alerts.local.json --report samples/batch-report.local.md --csv samples/batch-alerts.local.csv --min-severity High");
+        Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --source sample --rules rules --event samples/sample-event-batch.json --out samples/batch-alerts.local.json --report samples/batch-report.local.md --csv samples/batch-alerts.local.csv --html samples/batch-report.local.html --min-severity High");
     }
 }

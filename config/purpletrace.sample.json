@@ -5,6 +5,7 @@
   "OutputPath": "samples/config-alerts.local.json",
   "ReportPath": "samples/config-report.local.md",
   "CsvPath": "samples/config-alerts.local.csv",
+  "HtmlPath": "samples/config-report.local.html",
   "MinSeverity": "",
   "MaxEvents": 20
 }
