@@ -1,4 +1,5 @@
 using System.Text;
+using PurpleTrace.Agent.Detection;
 using PurpleTrace.Agent.Models;
 
 namespace PurpleTrace.Agent.Exporters;
@@ -47,7 +48,7 @@ public sealed class MarkdownReportExporter
 
         var severityGroups = alerts
             .GroupBy(alert => alert.Severity)
-            .OrderByDescending(group => GetSeverityRank(group.Key))
+            .OrderByDescending(group => SeverityRanker.GetRank(group.Key))
             .ThenBy(group => group.Key);
 
         foreach (var group in severityGroups)
@@ -85,12 +86,12 @@ public sealed class MarkdownReportExporter
     {
         builder.AppendLine("## Alert Summary");
         builder.AppendLine();
-        builder.AppendLine("| Rule ID | Rule Name | Severity | MITRE Technique | Process |");
-        builder.AppendLine("|---|---|---|---|---|");
+        builder.AppendLine("| Rule ID | Rule Name | Severity | MITRE Technique | Process | Evidence |");
+        builder.AppendLine("|---|---|---|---|---|---|");
 
-        foreach (var alert in alerts.OrderByDescending(alert => GetSeverityRank(alert.Severity)).ThenBy(alert => alert.RuleId))
+        foreach (var alert in alerts.OrderByDescending(alert => SeverityRanker.GetRank(alert.Severity)).ThenBy(alert => alert.RuleId))
         {
-            builder.AppendLine($"| {alert.RuleId} | {alert.RuleName} | {alert.Severity} | {alert.MitreTechniqueId} {alert.MitreTechniqueName} | {alert.ProcessName} |");
+            builder.AppendLine($"| {alert.RuleId} | {alert.RuleName} | {alert.Severity} | {alert.MitreTechniqueId} {alert.MitreTechniqueName} | {alert.ProcessName} | {alert.EvidenceSummary} |");
         }
 
         builder.AppendLine();
@@ -101,13 +102,14 @@ public sealed class MarkdownReportExporter
         builder.AppendLine("## Alert Details");
         builder.AppendLine();
 
-        foreach (var alert in alerts.OrderByDescending(alert => GetSeverityRank(alert.Severity)).ThenBy(alert => alert.RuleId))
+        foreach (var alert in alerts.OrderByDescending(alert => SeverityRanker.GetRank(alert.Severity)).ThenBy(alert => alert.RuleId))
         {
             builder.AppendLine($"### {alert.RuleId} - {alert.RuleName}");
             builder.AppendLine();
             builder.AppendLine($"- Severity: {alert.Severity}");
             builder.AppendLine($"- MITRE Tactic: {alert.MitreTactic}");
             builder.AppendLine($"- MITRE Technique: {alert.MitreTechniqueId} - {alert.MitreTechniqueName}");
+
             if (!string.IsNullOrWhiteSpace(alert.RuleAuthor))
             {
                 builder.AppendLine($"- Rule Author: {alert.RuleAuthor}");
@@ -132,10 +134,34 @@ public sealed class MarkdownReportExporter
                     builder.AppendLine($"  - {reference}");
                 }
             }
+
             builder.AppendLine($"- Hostname: {alert.Hostname}");
+            builder.AppendLine($"- User: {alert.UserName}");
             builder.AppendLine($"- Process: {alert.ProcessName}");
-            builder.AppendLine($"- Command Line: {alert.CommandLine}");
+            builder.AppendLine($"- Parent Process: {alert.ParentProcessName}");
+            builder.AppendLine($"- Command Line: `{alert.CommandLine}`");
             builder.AppendLine($"- Reason: {alert.Reason}");
+
+            if (!string.IsNullOrWhiteSpace(alert.EvidenceSummary))
+            {
+                builder.AppendLine($"- Evidence Summary: {alert.EvidenceSummary}");
+            }
+
+            if (alert.MatchedFields.Count > 0)
+            {
+                builder.AppendLine($"- Matched Fields: {string.Join(", ", alert.MatchedFields)}");
+            }
+
+            if (alert.MatchedValues.Count > 0)
+            {
+                builder.AppendLine("- Matched Values:");
+
+                foreach (var matchedValue in alert.MatchedValues)
+                {
+                    builder.AppendLine($"  - {matchedValue}");
+                }
+            }
+
             builder.AppendLine();
 
             if (alert.SourceEvent is not null)
@@ -146,22 +172,9 @@ public sealed class MarkdownReportExporter
                 builder.AppendLine($"- Event ID: {alert.SourceEvent.EventId}");
                 builder.AppendLine($"- User: {alert.SourceEvent.UserName}");
                 builder.AppendLine($"- Parent Process: {alert.SourceEvent.ParentProcessName}");
-                builder.AppendLine($"- Parent Command Line: {alert.SourceEvent.ParentCommandLine}");
+                builder.AppendLine($"- Parent Command Line: `{alert.SourceEvent.ParentCommandLine}`");
                 builder.AppendLine();
             }
         }
-    }
-
-    private static int GetSeverityRank(string severity)
-    {
-        return severity.ToLowerInvariant() switch
-        {
-            "critical" => 5,
-            "high" => 4,
-            "medium" => 3,
-            "low" => 2,
-            "informational" => 1,
-            _ => 0
-        };
     }
 }
