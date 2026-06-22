@@ -1,0 +1,19 @@
+{
+  "Source": "Sample",
+  "EventId": 1,
+  "EventType": 1,
+  "Hostname": "BORAN",
+  "UserName": "nonmr",
+  "ProcessId": 5001,
+  "ProcessName": "cmd.exe",
+  "ProcessPath": "C:\\Windows\\System32\\cmd.exe",
+  "CommandLine": "cmd.exe /c whoami && ipconfig /all && systeminfo",
+  "ParentProcessId": 3001,
+  "ParentProcessName": "explorer.exe",
+  "ParentProcessPath": "C:\\Windows\\explorer.exe",
+  "ParentCommandLine": "explorer.exe",
+  "DestinationIp": "",
+  "DestinationPort": 0,
+  "Protocol": "",
+  "AdditionalData": {}
+}
