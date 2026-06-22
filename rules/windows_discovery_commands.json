@@ -1,0 +1,22 @@
+{
+  "Id": "PT-RULE-003",
+  "Title": "Windows Discovery Commands",
+  "Description": "Detects common Windows discovery commands such as whoami, ipconfig, systeminfo, and net user.",
+  "Severity": "Medium",
+  "MitreTactic": "Discovery",
+  "MitreTechniqueId": "T1082",
+  "MitreTechniqueName": "System Information Discovery",
+  "ProcessNameContains": [
+    "cmd.exe",
+    "powershell.exe",
+    "pwsh.exe"
+  ],
+  "CommandLineContains": [
+    "whoami",
+    "ipconfig",
+    "systeminfo",
+    "net user",
+    "net localgroup"
+  ],
+  "ParentProcessNameContains": []
+}
