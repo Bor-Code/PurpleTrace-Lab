@@ -7,5 +7,6 @@
   "CsvPath": "samples/config-alerts.local.csv",
   "HtmlPath": "samples/config-report.local.html",
   "MinSeverity": "",
+  "MitreTechniqueId": "",
   "MaxEvents": 20
 }

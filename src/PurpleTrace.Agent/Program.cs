@@ -85,7 +85,8 @@ foreach (var endpointEvent in endpointEvents)
     detectedAlerts.AddRange(engine.Analyze(endpointEvent));
 }
 
-var alerts = AlertSeverityFilter.FilterByMinimumSeverity(detectedAlerts, cliOptions.MinSeverity);
+var severityFilteredAlerts = AlertSeverityFilter.FilterByMinimumSeverity(detectedAlerts, cliOptions.MinSeverity);
+var alerts = AlertMitreTechniqueFilter.FilterByTechniqueId(severityFilteredAlerts, cliOptions.MitreTechniqueId);
 
 var jsonExporter = new JsonAlertExporter();
 jsonExporter.Export(outputPath, alerts);
@@ -121,6 +122,11 @@ if (!string.IsNullOrWhiteSpace(cliOptions.MinSeverity))
     Console.WriteLine($"Minimum severity filter: {cliOptions.MinSeverity}");
 }
 
+if (!string.IsNullOrWhiteSpace(cliOptions.MitreTechniqueId))
+{
+    Console.WriteLine($"MITRE technique filter: {cliOptions.MitreTechniqueId}");
+}
+
 Console.WriteLine($"Exported alerts: {alerts.Count}");
 Console.WriteLine();
 Console.WriteLine(JsonSerializer.Serialize(alerts, options));
@@ -144,6 +150,7 @@ static void ApplyConfigIfProvided(CliOptions cliOptions)
     cliOptions.HtmlPath = config.HtmlPath;
     cliOptions.Source = config.Source;
     cliOptions.MinSeverity = config.MinSeverity;
+    cliOptions.MitreTechniqueId = config.MitreTechniqueId;
     cliOptions.MaxEvents = config.MaxEvents;
 }
 

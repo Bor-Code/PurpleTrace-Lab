@@ -11,6 +11,7 @@ public sealed class CliOptions
     public string HtmlPath { get; set; } = "samples/latest-report.local.html";
     public string Source { get; set; } = "sample";
     public string MinSeverity { get; set; } = string.Empty;
+    public string MitreTechniqueId { get; set; } = string.Empty;
     public int MaxEvents { get; set; } = 20;
     public bool ShowHelp { get; set; }
     public bool ListRules { get; set; }
