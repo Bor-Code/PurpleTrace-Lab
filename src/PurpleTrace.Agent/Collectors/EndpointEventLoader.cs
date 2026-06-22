@@ -7,6 +7,18 @@ public sealed class EndpointEventLoader
 {
     public EndpointEvent LoadFromJsonFile(string filePath)
     {
+        var events = LoadManyFromJsonFile(filePath);
+
+        if (events.Count == 0)
+        {
+            throw new InvalidOperationException($"No endpoint event found in: {filePath}");
+        }
+
+        return events[0];
+    }
+
+    public List<EndpointEvent> LoadManyFromJsonFile(string filePath)
+    {
         if (!File.Exists(filePath))
         {
             throw new FileNotFoundException($"Event file not found: {filePath}");
@@ -14,16 +26,35 @@ public sealed class EndpointEventLoader
 
         var json = File.ReadAllText(filePath);
 
-        var endpointEvent = JsonSerializer.Deserialize<EndpointEvent>(json, new JsonSerializerOptions
+        using var document = JsonDocument.Parse(json);
+
+        var options = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
-        });
+        };
 
-        if (endpointEvent is null)
+        if (document.RootElement.ValueKind == JsonValueKind.Array)
         {
-            throw new InvalidOperationException($"Could not deserialize endpoint event from: {filePath}");
+            var events = JsonSerializer.Deserialize<List<EndpointEvent>>(json, options);
+
+            return events ?? new List<EndpointEvent>();
         }
 
-        return endpointEvent;
+        if (document.RootElement.ValueKind == JsonValueKind.Object)
+        {
+            var endpointEvent = JsonSerializer.Deserialize<EndpointEvent>(json, options);
+
+            if (endpointEvent is null)
+            {
+                return new List<EndpointEvent>();
+            }
+
+            return new List<EndpointEvent>
+            {
+                endpointEvent
+            };
+        }
+
+        throw new InvalidOperationException($"Unsupported event JSON format: {filePath}");
     }
 }
