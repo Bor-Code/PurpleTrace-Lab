@@ -23,10 +23,20 @@ public sealed class RuleLoader
                 PropertyNameCaseInsensitive = true
             });
 
-            if (rule is not null && !string.IsNullOrWhiteSpace(rule.Id))
+            if (rule is null)
             {
-                rules.Add(rule);
+                throw new InvalidOperationException($"Could not deserialize rule file: {file}");
             }
+
+            var validationResult = RuleValidator.Validate(rule);
+
+            if (!validationResult.IsValid)
+            {
+                var errors = string.Join(Environment.NewLine, validationResult.Errors.Select(error => $"- {error}"));
+                throw new InvalidOperationException($"Invalid rule file: {file}{Environment.NewLine}{errors}");
+            }
+
+            rules.Add(rule);
         }
 
         return rules;
