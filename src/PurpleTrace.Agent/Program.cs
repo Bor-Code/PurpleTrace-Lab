@@ -36,10 +36,12 @@ if (!string.IsNullOrWhiteSpace(cliOptions.MinSeverity) && !SeverityRanker.IsVali
 }
 
 var rulesDirectory = ResolvePath(cliOptions.RulesDirectory);
+var eventPathForSummary = ResolvePath(cliOptions.EventPath);
 var outputPath = ResolvePath(cliOptions.OutputPath);
 var reportPath = ResolvePath(cliOptions.ReportPath);
 var csvPath = ResolvePath(cliOptions.CsvPath);
 var htmlPath = ResolvePath(cliOptions.HtmlPath);
+var summaryPath = ResolvePath(cliOptions.SummaryPath);
 
 var ruleLoader = new RuleLoader();
 List<DetectionRule> rules;
@@ -102,6 +104,23 @@ csvExporter.Export(csvPath, alerts);
 var htmlExporter = new HtmlReportExporter();
 htmlExporter.Export(htmlPath, alerts);
 
+var runSummary = BuildRunSummary(
+    cliOptions,
+    rulesDirectory,
+    eventPathForSummary,
+    outputPath,
+    reportPath,
+    csvPath,
+    htmlPath,
+    summaryPath,
+    rules.Count,
+    endpointEvents.Count,
+    detectedAlerts.Count,
+    alerts);
+
+var runSummaryExporter = new RunSummaryExporter();
+runSummaryExporter.Export(summaryPath, runSummary);
+
 var options = new JsonSerializerOptions
 {
     WriteIndented = true
@@ -115,6 +134,7 @@ Console.WriteLine($"JSON output path: {outputPath}");
 Console.WriteLine($"Markdown report path: {reportPath}");
 Console.WriteLine($"CSV output path: {csvPath}");
 Console.WriteLine($"HTML report path: {htmlPath}");
+Console.WriteLine($"Summary output path: {summaryPath}");
 Console.WriteLine($"Loaded rules: {rules.Count}");
 Console.WriteLine($"Loaded events: {endpointEvents.Count}");
 Console.WriteLine($"Detected alerts before filtering: {detectedAlerts.Count}");
@@ -160,6 +180,7 @@ static void ApplyConfigIfProvided(CliOptions cliOptions)
     cliOptions.ReportPath = config.ReportPath;
     cliOptions.CsvPath = config.CsvPath;
     cliOptions.HtmlPath = config.HtmlPath;
+    cliOptions.SummaryPath = config.SummaryPath;
     cliOptions.Source = config.Source;
     cliOptions.MinSeverity = config.MinSeverity;
     cliOptions.MitreTechniqueId = config.MitreTechniqueId;
@@ -196,6 +217,76 @@ static List<EndpointEvent> LoadEndpointEvents(CliOptions cliOptions)
     var loader = new EndpointEventLoader();
 
     return loader.LoadManyFromJsonFile(eventPath);
+}
+
+static DetectionRunSummary BuildRunSummary(
+    CliOptions cliOptions,
+    string rulesDirectory,
+    string eventPath,
+    string outputPath,
+    string reportPath,
+    string csvPath,
+    string htmlPath,
+    string summaryPath,
+    int loadedRules,
+    int loadedEvents,
+    int detectedAlertsBeforeFiltering,
+    List<DetectionAlert> exportedAlerts)
+{
+    var summary = new DetectionRunSummary
+    {
+        Source = cliOptions.Source,
+        RulesDirectory = rulesDirectory,
+        EventPath = eventPath,
+        JsonOutputPath = outputPath,
+        MarkdownReportPath = reportPath,
+        CsvOutputPath = csvPath,
+        HtmlReportPath = htmlPath,
+        SummaryOutputPath = summaryPath,
+        LoadedRules = loadedRules,
+        LoadedEvents = loadedEvents,
+        DetectedAlertsBeforeFiltering = detectedAlertsBeforeFiltering,
+        ExportedAlerts = exportedAlerts.Count,
+        MinSeverity = cliOptions.MinSeverity,
+        MitreTechniqueId = cliOptions.MitreTechniqueId,
+        RuleId = cliOptions.RuleId,
+        Tag = cliOptions.Tag,
+        SeverityCounts = CountBy(exportedAlerts, alert => alert.Severity),
+        MitreTechniqueCounts = CountBy(exportedAlerts, alert => alert.MitreTechniqueId),
+        RuleCounts = CountBy(exportedAlerts, alert => alert.RuleId)
+    };
+
+    if (!string.IsNullOrWhiteSpace(cliOptions.MinSeverity))
+    {
+        summary.ActiveFilters.Add($"min-severity={cliOptions.MinSeverity}");
+    }
+
+    if (!string.IsNullOrWhiteSpace(cliOptions.MitreTechniqueId))
+    {
+        summary.ActiveFilters.Add($"mitre-technique={cliOptions.MitreTechniqueId}");
+    }
+
+    if (!string.IsNullOrWhiteSpace(cliOptions.RuleId))
+    {
+        summary.ActiveFilters.Add($"rule-id={cliOptions.RuleId}");
+    }
+
+    if (!string.IsNullOrWhiteSpace(cliOptions.Tag))
+    {
+        summary.ActiveFilters.Add($"tag={cliOptions.Tag}");
+    }
+
+    return summary;
+}
+
+static Dictionary<string, int> CountBy(IEnumerable<DetectionAlert> alerts, Func<DetectionAlert, string> selector)
+{
+    return alerts
+        .Select(selector)
+        .Where(value => !string.IsNullOrWhiteSpace(value))
+        .GroupBy(value => value, StringComparer.OrdinalIgnoreCase)
+        .OrderBy(group => group.Key)
+        .ToDictionary(group => group.Key, group => group.Count(), StringComparer.OrdinalIgnoreCase);
 }
 
 static string ResolvePath(string path)

@@ -6,6 +6,7 @@
   "ReportPath": "samples/config-report.local.md",
   "CsvPath": "samples/config-alerts.local.csv",
   "HtmlPath": "samples/config-report.local.html",
+  "SummaryPath": "samples/config-summary.local.json",
   "MinSeverity": "",
   "MitreTechniqueId": "",
   "RuleId": "",
