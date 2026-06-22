@@ -17,3 +17,5 @@ Thumbs.db
 samples/*.local.json
 
 samples/*.local.md
+
+samples/*.local.csv

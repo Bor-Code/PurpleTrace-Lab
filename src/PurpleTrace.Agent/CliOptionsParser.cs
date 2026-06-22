@@ -40,6 +40,13 @@ public static class CliOptionsParser
                 continue;
             }
 
+            if (current.Equals("--csv", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+            {
+                options.CsvPath = args[i + 1];
+                i++;
+                continue;
+            }
+
             if (current.Equals("--source", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 options.Source = args[i + 1];
