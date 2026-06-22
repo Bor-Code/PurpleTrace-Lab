@@ -10,6 +10,7 @@ public sealed class CliOptions
     public string CsvPath { get; set; } = "samples/latest-alerts.local.csv";
     public string HtmlPath { get; set; } = "samples/latest-report.local.html";
     public string SummaryPath { get; set; } = "samples/latest-summary.local.json";
+    public string RuleCoveragePath { get; set; } = "docs/rule-coverage.md";
     public string Source { get; set; } = "sample";
     public string MinSeverity { get; set; } = string.Empty;
     public string MitreTechniqueId { get; set; } = string.Empty;
@@ -19,4 +20,5 @@ public sealed class CliOptions
     public bool ShowHelp { get; set; }
     public bool ListRules { get; set; }
     public bool ValidateRules { get; set; }
+    public bool ExportRuleCoverage { get; set; }
 }

@@ -42,6 +42,7 @@ var reportPath = ResolvePath(cliOptions.ReportPath);
 var csvPath = ResolvePath(cliOptions.CsvPath);
 var htmlPath = ResolvePath(cliOptions.HtmlPath);
 var summaryPath = ResolvePath(cliOptions.SummaryPath);
+var ruleCoveragePath = ResolvePath(cliOptions.RuleCoveragePath);
 
 var ruleLoader = new RuleLoader();
 List<DetectionRule> rules;
@@ -74,6 +75,19 @@ if (cliOptions.ValidateRules)
 if (cliOptions.ListRules)
 {
     RuleCatalogPrinter.Print(rules);
+    return;
+}
+
+if (cliOptions.ExportRuleCoverage)
+{
+    var ruleCoverageExporter = new RuleCoverageMarkdownExporter();
+    ruleCoverageExporter.Export(ruleCoveragePath, rules);
+
+    Console.WriteLine("PurpleTrace Rule Coverage Export");
+    Console.WriteLine();
+    Console.WriteLine($"Rules directory: {rulesDirectory}");
+    Console.WriteLine($"Loaded rules: {rules.Count}");
+    Console.WriteLine($"Rule coverage path: {ruleCoveragePath}");
     return;
 }
 
