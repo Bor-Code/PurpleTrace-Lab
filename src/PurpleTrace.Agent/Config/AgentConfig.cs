@@ -10,5 +10,6 @@ public sealed class AgentConfig
     public string HtmlPath { get; set; } = "samples/latest-report.local.html";
     public string Source { get; set; } = "sample";
     public string MinSeverity { get; set; } = string.Empty;
+    public string MitreTechniqueId { get; set; } = string.Empty;
     public int MaxEvents { get; set; } = 20;
 }
