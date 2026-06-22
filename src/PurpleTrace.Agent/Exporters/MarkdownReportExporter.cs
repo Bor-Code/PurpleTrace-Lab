@@ -176,5 +176,5 @@ public sealed class MarkdownReportExporter
                 builder.AppendLine();
             }
         }
-    }
+}
 }
