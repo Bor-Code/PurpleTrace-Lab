@@ -4,87 +4,118 @@ namespace PurpleTrace.Agent.Detection;
 
 public sealed class DetectionEngine
 {
-    private readonly List<DetectionRule> _rules;
+    private readonly List<DetectionRule> rules;
 
     public DetectionEngine(IEnumerable<DetectionRule> rules)
     {
-        _rules = rules.ToList();
+        this.rules = rules.ToList();
     }
 
     public List<DetectionAlert> Analyze(EndpointEvent endpointEvent)
     {
         var alerts = new List<DetectionAlert>();
 
-        foreach (var rule in _rules)
+        foreach (var rule in rules)
         {
-            if (IsMatch(rule, endpointEvent))
+            var matchedFields = new List<string>();
+            var matchedValues = new List<string>();
+
+            if (!MatchesRule(rule, endpointEvent, matchedFields, matchedValues))
             {
-                alerts.Add(CreateAlert(rule, endpointEvent));
+                continue;
             }
+
+            alerts.Add(new DetectionAlert
+            {
+                RuleId = rule.Id,
+                RuleName = rule.Title,
+                Severity = rule.Severity,
+                MitreTactic = rule.MitreTactic,
+                MitreTechniqueId = rule.MitreTechniqueId,
+                MitreTechniqueName = rule.MitreTechniqueName,
+
+                RuleAuthor = rule.Author,
+                RuleCreatedUtc = rule.CreatedUtc,
+                RuleTags = rule.Tags.ToList(),
+                RuleReferences = rule.References.ToList(),
+
+                Hostname = endpointEvent.Hostname,
+                UserName = endpointEvent.UserName,
+                ProcessName = endpointEvent.ProcessName,
+                ProcessPath = endpointEvent.ProcessPath,
+                CommandLine = endpointEvent.CommandLine,
+                ParentProcessName = endpointEvent.ParentProcessName,
+                ParentCommandLine = endpointEvent.ParentCommandLine,
+
+                Reason = rule.Description,
+                EvidenceSummary = string.Join("; ", matchedValues),
+                MatchedFields = matchedFields.Distinct(StringComparer.OrdinalIgnoreCase).ToList(),
+                MatchedValues = matchedValues,
+
+                SourceEvent = endpointEvent
+            });
         }
 
         return alerts;
     }
 
-    private static bool IsMatch(DetectionRule rule, EndpointEvent endpointEvent)
+    private static bool MatchesRule(
+        DetectionRule rule,
+        EndpointEvent endpointEvent,
+        List<string> matchedFields,
+        List<string> matchedValues)
     {
-        var processMatch = MatchesAny(endpointEvent.ProcessName, rule.ProcessNameContains);
-        var commandLineMatch = MatchesAny(endpointEvent.CommandLine, rule.CommandLineContains);
-        var parentProcessMatch = MatchesAny(endpointEvent.ParentProcessName, rule.ParentProcessNameContains);
-
-        if (rule.ProcessNameContains.Count > 0 && !processMatch)
-        {
-            return false;
-        }
-
-        if (rule.CommandLineContains.Count > 0 && !commandLineMatch)
-        {
-            return false;
-        }
-
-        if (rule.ParentProcessNameContains.Count > 0 && !parentProcessMatch)
-        {
-            return false;
-        }
-
-        return true;
+        return MatchesAny(
+                   endpointEvent.ProcessName,
+                   rule.ProcessNameContains,
+                   "ProcessName",
+                   matchedFields,
+                   matchedValues) &&
+               MatchesAny(
+                   endpointEvent.CommandLine,
+                   rule.CommandLineContains,
+                   "CommandLine",
+                   matchedFields,
+                   matchedValues) &&
+               MatchesAny(
+                   endpointEvent.ParentProcessName,
+                   rule.ParentProcessNameContains,
+                   "ParentProcessName",
+                   matchedFields,
+                   matchedValues);
     }
 
-    private static bool MatchesAny(string value, List<string> patterns)
+    private static bool MatchesAny(
+        string fieldValue,
+        List<string> patterns,
+        string fieldName,
+        List<string> matchedFields,
+        List<string> matchedValues)
     {
         if (patterns.Count == 0)
         {
             return true;
         }
 
-        if (string.IsNullOrWhiteSpace(value))
+        var matched = false;
+
+        foreach (var pattern in patterns)
         {
-            return false;
+            if (string.IsNullOrWhiteSpace(pattern))
+            {
+                continue;
+            }
+
+            if (!fieldValue.Contains(pattern, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            matched = true;
+            matchedFields.Add(fieldName);
+            matchedValues.Add($"{fieldName} contains {pattern}");
         }
 
-        return patterns.Any(pattern =>
-            value.Contains(pattern, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static DetectionAlert CreateAlert(DetectionRule rule, EndpointEvent endpointEvent)
-    {
-        return new DetectionAlert
-        {
-            RuleId = rule.Id,
-            RuleName = rule.Title,
-            Severity = rule.Severity,
-            MitreTactic = rule.MitreTactic,
-            MitreTechniqueId = rule.MitreTechniqueId,
-            MitreTechniqueName = rule.MitreTechniqueName,
-            Hostname = endpointEvent.Hostname,
-            ProcessName = endpointEvent.ProcessName,
-            CommandLine = endpointEvent.CommandLine,
-            Reason = rule.Description,
-            SourceEvent = endpointEvent,
-            RuleAuthor = rule.Author,
-            RuleCreatedUtc = rule.CreatedUtc,
-            RuleTags = rule.Tags.ToList(),
-            RuleReferences = rule.References.ToList(),
-        };
+        return matched;
     }
 }
