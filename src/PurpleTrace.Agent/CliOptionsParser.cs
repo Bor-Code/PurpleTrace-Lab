@@ -33,6 +33,12 @@ public static class CliOptionsParser
                 continue;
             }
 
+            if (current.Equals("--validate-rules", StringComparison.OrdinalIgnoreCase))
+            {
+                options.ValidateRules = true;
+                continue;
+            }
+
             if (current.Equals("--config", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 options.ConfigPath = args[i + 1];

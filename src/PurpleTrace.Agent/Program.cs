@@ -41,7 +41,32 @@ var reportPath = ResolvePath(cliOptions.ReportPath);
 var csvPath = ResolvePath(cliOptions.CsvPath);
 
 var ruleLoader = new RuleLoader();
-var rules = ruleLoader.LoadFromDirectory(rulesDirectory);
+List<DetectionRule> rules;
+
+try
+{
+    rules = ruleLoader.LoadFromDirectory(rulesDirectory);
+}
+catch (Exception exception)
+{
+    if (cliOptions.ValidateRules)
+    {
+        RuleValidationPrinter.PrintFailure(rulesDirectory, exception);
+        Environment.ExitCode = 1;
+        return;
+    }
+
+    Console.WriteLine("Could not load detection rules.");
+    Console.WriteLine(exception.Message);
+    Environment.ExitCode = 1;
+    return;
+}
+
+if (cliOptions.ValidateRules)
+{
+    RuleValidationPrinter.PrintSuccess(rulesDirectory, rules);
+    return;
+}
 
 if (cliOptions.ListRules)
 {
