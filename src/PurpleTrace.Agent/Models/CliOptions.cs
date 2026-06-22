@@ -9,4 +9,5 @@ public sealed class CliOptions
     public string CsvPath { get; set; } = "samples/latest-alerts.local.csv";
     public string Source { get; set; } = "sample";
     public int MaxEvents { get; set; } = 20;
+    public bool ShowHelp { get; set; }
 }
