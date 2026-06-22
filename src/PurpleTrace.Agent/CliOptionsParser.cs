@@ -12,6 +12,14 @@ public static class CliOptionsParser
         {
             var current = args[i];
 
+            if (current.Equals("--help", StringComparison.OrdinalIgnoreCase) ||
+                current.Equals("-h", StringComparison.OrdinalIgnoreCase) ||
+                current.Equals("/?", StringComparison.OrdinalIgnoreCase))
+            {
+                options.ShowHelp = true;
+                continue;
+            }
+
             if (current.Equals("--rules", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 options.RulesDirectory = args[i + 1];

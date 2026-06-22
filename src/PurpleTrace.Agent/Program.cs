@@ -7,6 +7,21 @@ using PurpleTrace.Agent.Models;
 
 var cliOptions = CliOptionsParser.Parse(args);
 
+if (cliOptions.ShowHelp)
+{
+    CliHelp.Print();
+    return;
+}
+
+if (!IsValidSource(cliOptions.Source))
+{
+    Console.WriteLine($"Invalid source: {cliOptions.Source}");
+    Console.WriteLine("Supported sources: sample, sysmon");
+    Console.WriteLine();
+    CliHelp.Print();
+    return;
+}
+
 var rulesDirectory = ResolvePath(cliOptions.RulesDirectory);
 var outputPath = ResolvePath(cliOptions.OutputPath);
 var reportPath = ResolvePath(cliOptions.ReportPath);
@@ -51,6 +66,12 @@ Console.WriteLine($"Loaded events: {endpointEvents.Count}");
 Console.WriteLine($"Generated alerts: {alerts.Count}");
 Console.WriteLine();
 Console.WriteLine(JsonSerializer.Serialize(alerts, options));
+
+static bool IsValidSource(string source)
+{
+    return source.Equals("sample", StringComparison.OrdinalIgnoreCase) ||
+           source.Equals("sysmon", StringComparison.OrdinalIgnoreCase);
+}
 
 static List<EndpointEvent> LoadEndpointEvents(CliOptions cliOptions)
 {
