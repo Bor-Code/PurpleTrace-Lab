@@ -11,4 +11,5 @@ public sealed class CliOptions
     public string Source { get; set; } = "sample";
     public int MaxEvents { get; set; } = 20;
     public bool ShowHelp { get; set; }
+    public bool ListRules { get; set; }
 }

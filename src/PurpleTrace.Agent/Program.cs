@@ -33,6 +33,12 @@ var csvPath = ResolvePath(cliOptions.CsvPath);
 var ruleLoader = new RuleLoader();
 var rules = ruleLoader.LoadFromDirectory(rulesDirectory);
 
+if (cliOptions.ListRules)
+{
+    RuleCatalogPrinter.Print(rules);
+    return;
+}
+
 var endpointEvents = LoadEndpointEvents(cliOptions);
 
 var engine = new DetectionEngine(rules);
