@@ -15,3 +15,5 @@ Release/
 Thumbs.db
 
 samples/*.local.json
+
+samples/*.local.md
