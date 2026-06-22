@@ -25,6 +25,15 @@ if (!IsValidSource(cliOptions.Source))
     return;
 }
 
+if (!string.IsNullOrWhiteSpace(cliOptions.MinSeverity) && !SeverityRanker.IsValid(cliOptions.MinSeverity))
+{
+    Console.WriteLine($"Invalid minimum severity: {cliOptions.MinSeverity}");
+    Console.WriteLine($"Valid values: {SeverityRanker.ValidValues}");
+    Console.WriteLine();
+    CliHelp.Print();
+    return;
+}
+
 var rulesDirectory = ResolvePath(cliOptions.RulesDirectory);
 var outputPath = ResolvePath(cliOptions.OutputPath);
 var reportPath = ResolvePath(cliOptions.ReportPath);
@@ -42,12 +51,14 @@ if (cliOptions.ListRules)
 var endpointEvents = LoadEndpointEvents(cliOptions);
 
 var engine = new DetectionEngine(rules);
-var alerts = new List<DetectionAlert>();
+var detectedAlerts = new List<DetectionAlert>();
 
 foreach (var endpointEvent in endpointEvents)
 {
-    alerts.AddRange(engine.Analyze(endpointEvent));
+    detectedAlerts.AddRange(engine.Analyze(endpointEvent));
 }
+
+var alerts = AlertSeverityFilter.FilterByMinimumSeverity(detectedAlerts, cliOptions.MinSeverity);
 
 var jsonExporter = new JsonAlertExporter();
 jsonExporter.Export(outputPath, alerts);
@@ -72,7 +83,14 @@ Console.WriteLine($"Markdown report path: {reportPath}");
 Console.WriteLine($"CSV output path: {csvPath}");
 Console.WriteLine($"Loaded rules: {rules.Count}");
 Console.WriteLine($"Loaded events: {endpointEvents.Count}");
-Console.WriteLine($"Generated alerts: {alerts.Count}");
+Console.WriteLine($"Detected alerts before filtering: {detectedAlerts.Count}");
+
+if (!string.IsNullOrWhiteSpace(cliOptions.MinSeverity))
+{
+    Console.WriteLine($"Minimum severity filter: {cliOptions.MinSeverity}");
+}
+
+Console.WriteLine($"Exported alerts: {alerts.Count}");
 Console.WriteLine();
 Console.WriteLine(JsonSerializer.Serialize(alerts, options));
 
@@ -93,6 +111,7 @@ static void ApplyConfigIfProvided(CliOptions cliOptions)
     cliOptions.ReportPath = config.ReportPath;
     cliOptions.CsvPath = config.CsvPath;
     cliOptions.Source = config.Source;
+    cliOptions.MinSeverity = config.MinSeverity;
     cliOptions.MaxEvents = config.MaxEvents;
 }
 

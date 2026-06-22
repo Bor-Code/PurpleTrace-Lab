@@ -8,5 +8,6 @@ public sealed class AgentConfig
     public string ReportPath { get; set; } = "samples/latest-report.local.md";
     public string CsvPath { get; set; } = "samples/latest-alerts.local.csv";
     public string Source { get; set; } = "sample";
+    public string MinSeverity { get; set; } = string.Empty;
     public int MaxEvents { get; set; } = 20;
 }

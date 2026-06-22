@@ -75,6 +75,13 @@ public static class CliOptionsParser
                 continue;
             }
 
+            if (current.Equals("--min-severity", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+            {
+                options.MinSeverity = args[i + 1];
+                i++;
+                continue;
+            }
+
             if (current.Equals("--max", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 if (int.TryParse(args[i + 1], out var maxEvents))
