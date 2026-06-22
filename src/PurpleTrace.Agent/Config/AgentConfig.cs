@@ -12,5 +12,6 @@ public sealed class AgentConfig
     public string MinSeverity { get; set; } = string.Empty;
     public string MitreTechniqueId { get; set; } = string.Empty;
     public string RuleId { get; set; } = string.Empty;
+    public string Tag { get; set; } = string.Empty;
     public int MaxEvents { get; set; } = 20;
 }

@@ -28,6 +28,7 @@ public static class CliHelp
         Console.WriteLine("  --mitre              Short alias for --mitre-technique");
         Console.WriteLine("  --rule-id            Export only alerts matching a detection rule ID");
         Console.WriteLine("  --rule               Short alias for --rule-id");
+        Console.WriteLine("  --tag                Export only alerts matching a rule tag");
         Console.WriteLine("  --max                Maximum Sysmon events to read");
         Console.WriteLine("  --help               Show help");
         Console.WriteLine();
@@ -36,6 +37,7 @@ public static class CliHelp
         Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --config config/purpletrace.sample.json --min-severity High");
         Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --config config/purpletrace.sample.json --mitre-technique T1082");
         Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --config config/purpletrace.sample.json --rule-id PT-RULE-003");
+        Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --config config/purpletrace.sample.json --tag discovery");
         Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --list-rules --rules rules");
         Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --validate-rules --rules rules");
     }

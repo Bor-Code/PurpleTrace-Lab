@@ -87,7 +87,8 @@ foreach (var endpointEvent in endpointEvents)
 
 var severityFilteredAlerts = AlertSeverityFilter.FilterByMinimumSeverity(detectedAlerts, cliOptions.MinSeverity);
 var mitreFilteredAlerts = AlertMitreTechniqueFilter.FilterByTechniqueId(severityFilteredAlerts, cliOptions.MitreTechniqueId);
-var alerts = AlertRuleIdFilter.FilterByRuleId(mitreFilteredAlerts, cliOptions.RuleId);
+var ruleFilteredAlerts = AlertRuleIdFilter.FilterByRuleId(mitreFilteredAlerts, cliOptions.RuleId);
+var alerts = AlertTagFilter.FilterByTag(ruleFilteredAlerts, cliOptions.Tag);
 
 var jsonExporter = new JsonAlertExporter();
 jsonExporter.Export(outputPath, alerts);
@@ -133,6 +134,11 @@ if (!string.IsNullOrWhiteSpace(cliOptions.RuleId))
     Console.WriteLine($"Rule ID filter: {cliOptions.RuleId}");
 }
 
+if (!string.IsNullOrWhiteSpace(cliOptions.Tag))
+{
+    Console.WriteLine($"Tag filter: {cliOptions.Tag}");
+}
+
 Console.WriteLine($"Exported alerts: {alerts.Count}");
 Console.WriteLine();
 Console.WriteLine(JsonSerializer.Serialize(alerts, options));
@@ -158,6 +164,7 @@ static void ApplyConfigIfProvided(CliOptions cliOptions)
     cliOptions.MinSeverity = config.MinSeverity;
     cliOptions.MitreTechniqueId = config.MitreTechniqueId;
     cliOptions.RuleId = config.RuleId;
+    cliOptions.Tag = config.Tag;
     cliOptions.MaxEvents = config.MaxEvents;
 }
 
