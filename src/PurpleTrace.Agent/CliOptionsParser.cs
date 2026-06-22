@@ -88,6 +88,13 @@ public static class CliOptionsParser
                 continue;
             }
 
+            if (current.Equals("--summary", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+            {
+                options.SummaryPath = args[i + 1];
+                i++;
+                continue;
+            }
+
             if (current.Equals("--source", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 options.Source = args[i + 1];

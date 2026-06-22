@@ -9,6 +9,7 @@ public sealed class CliOptions
     public string ReportPath { get; set; } = "samples/latest-report.local.md";
     public string CsvPath { get; set; } = "samples/latest-alerts.local.csv";
     public string HtmlPath { get; set; } = "samples/latest-report.local.html";
+    public string SummaryPath { get; set; } = "samples/latest-summary.local.json";
     public string Source { get; set; } = "sample";
     public string MinSeverity { get; set; } = string.Empty;
     public string MitreTechniqueId { get; set; } = string.Empty;

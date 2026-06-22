@@ -10,7 +10,7 @@ public static class CliHelp
         Console.WriteLine("  PurpleTrace.Agent --config config/purpletrace.sample.json");
         Console.WriteLine("  PurpleTrace.Agent --list-rules --rules rules");
         Console.WriteLine("  PurpleTrace.Agent --validate-rules --rules rules");
-        Console.WriteLine("  PurpleTrace.Agent --source sample --rules rules --event samples/sample-powershell-event.json --out samples/alerts.local.json --report samples/report.local.md --csv samples/alerts.local.csv --html samples/report.local.html");
+        Console.WriteLine("  PurpleTrace.Agent --source sample --rules rules --event samples/sample-powershell-event.json --out samples/alerts.local.json --report samples/report.local.md --csv samples/alerts.local.csv --html samples/report.local.html --summary samples/summary.local.json");
         Console.WriteLine();
         Console.WriteLine("Options:");
         Console.WriteLine("  --config             JSON config file path");
@@ -23,6 +23,7 @@ public static class CliHelp
         Console.WriteLine("  --report             Markdown report output path");
         Console.WriteLine("  --csv                CSV alert output path");
         Console.WriteLine("  --html               HTML report output path");
+        Console.WriteLine("  --summary            JSON run summary output path");
         Console.WriteLine("  --min-severity       Minimum alert severity to export. Values: Critical, High, Medium, Low, Informational");
         Console.WriteLine("  --mitre-technique    Export only alerts matching a MITRE technique ID");
         Console.WriteLine("  --mitre              Short alias for --mitre-technique");
