@@ -13,3 +13,5 @@ Release/
 # OS files
 .DS_Store
 Thumbs.db
+
+samples/*.local.json

@@ -1,10 +1,13 @@
 using System.Text.Json;
+using PurpleTrace.Agent;
 using PurpleTrace.Agent.Detection;
 using PurpleTrace.Agent.Exporters;
 using PurpleTrace.Agent.Models;
 
-var rulesDirectory = ResolveRulesDirectory();
-var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "samples", "latest-alerts.json");
+var cliOptions = CliOptionsParser.Parse(args);
+
+var rulesDirectory = ResolvePath(cliOptions.RulesDirectory);
+var outputPath = ResolvePath(cliOptions.OutputPath);
 
 var loader = new RuleLoader();
 var rules = loader.LoadFromDirectory(rulesDirectory);
@@ -36,23 +39,35 @@ var options = new JsonSerializerOptions
     WriteIndented = true
 };
 
-Console.WriteLine("PurpleTrace Agent - JSON Alert Export Test");
+Console.WriteLine("PurpleTrace Agent - CLI Detection Pipeline Test");
 Console.WriteLine();
+Console.WriteLine($"Rules directory: {rulesDirectory}");
+Console.WriteLine($"Output path: {outputPath}");
 Console.WriteLine($"Loaded rules: {rules.Count}");
 Console.WriteLine($"Generated alerts: {alerts.Count}");
-Console.WriteLine($"Export path: {outputPath}");
 Console.WriteLine();
 Console.WriteLine(JsonSerializer.Serialize(alerts, options));
 
-static string ResolveRulesDirectory()
+static string ResolvePath(string path)
 {
+    if (Path.IsPathRooted(path))
+    {
+        return path;
+    }
+
     var currentDirectory = Directory.GetCurrentDirectory();
 
     while (!string.IsNullOrWhiteSpace(currentDirectory))
     {
-        var candidate = Path.Combine(currentDirectory, "rules");
+        var candidate = Path.Combine(currentDirectory, path);
+        var candidateDirectory = Path.GetDirectoryName(candidate);
 
-        if (Directory.Exists(candidate))
+        if (Directory.Exists(candidate) || File.Exists(candidate))
+        {
+            return candidate;
+        }
+
+        if (!string.IsNullOrWhiteSpace(candidateDirectory) && Directory.Exists(candidateDirectory))
         {
             return candidate;
         }
@@ -67,5 +82,5 @@ static string ResolveRulesDirectory()
         currentDirectory = parent.FullName;
     }
 
-    throw new DirectoryNotFoundException("Could not locate the rules directory.");
+    return Path.Combine(Directory.GetCurrentDirectory(), path);
 }
