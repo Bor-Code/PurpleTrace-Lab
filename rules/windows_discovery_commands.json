@@ -6,17 +6,25 @@
   "MitreTactic": "Discovery",
   "MitreTechniqueId": "T1082",
   "MitreTechniqueName": "System Information Discovery",
+  "Author": "PurpleTrace Lab",
+  "CreatedUtc": "2026-06-22T00:00:00Z",
+  "Tags": [
+    "discovery",
+    "windows",
+    "cmd",
+    "reconnaissance"
+  ],
+  "References": [
+    "MITRE ATT&CK T1082 - System Information Discovery"
+  ],
   "ProcessNameContains": [
-    "cmd.exe",
-    "powershell.exe",
-    "pwsh.exe"
+    "cmd.exe"
   ],
   "CommandLineContains": [
     "whoami",
     "ipconfig",
     "systeminfo",
-    "net user",
-    "net localgroup"
+    "net user"
   ],
   "ParentProcessNameContains": []
 }
