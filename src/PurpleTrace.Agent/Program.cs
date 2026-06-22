@@ -10,6 +10,7 @@ var cliOptions = CliOptionsParser.Parse(args);
 var rulesDirectory = ResolvePath(cliOptions.RulesDirectory);
 var outputPath = ResolvePath(cliOptions.OutputPath);
 var reportPath = ResolvePath(cliOptions.ReportPath);
+var csvPath = ResolvePath(cliOptions.CsvPath);
 
 var ruleLoader = new RuleLoader();
 var rules = ruleLoader.LoadFromDirectory(rulesDirectory);
@@ -30,6 +31,9 @@ jsonExporter.Export(outputPath, alerts);
 var markdownExporter = new MarkdownReportExporter();
 markdownExporter.Export(reportPath, alerts);
 
+var csvExporter = new CsvAlertExporter();
+csvExporter.Export(csvPath, alerts);
+
 var options = new JsonSerializerOptions
 {
     WriteIndented = true
@@ -41,6 +45,7 @@ Console.WriteLine($"Source: {cliOptions.Source}");
 Console.WriteLine($"Rules directory: {rulesDirectory}");
 Console.WriteLine($"JSON output path: {outputPath}");
 Console.WriteLine($"Markdown report path: {reportPath}");
+Console.WriteLine($"CSV output path: {csvPath}");
 Console.WriteLine($"Loaded rules: {rules.Count}");
 Console.WriteLine($"Loaded events: {endpointEvents.Count}");
 Console.WriteLine($"Generated alerts: {alerts.Count}");
