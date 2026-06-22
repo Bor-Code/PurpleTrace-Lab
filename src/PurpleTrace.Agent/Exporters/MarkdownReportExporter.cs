@@ -108,6 +108,30 @@ public sealed class MarkdownReportExporter
             builder.AppendLine($"- Severity: {alert.Severity}");
             builder.AppendLine($"- MITRE Tactic: {alert.MitreTactic}");
             builder.AppendLine($"- MITRE Technique: {alert.MitreTechniqueId} - {alert.MitreTechniqueName}");
+            if (!string.IsNullOrWhiteSpace(alert.RuleAuthor))
+            {
+                builder.AppendLine($"- Rule Author: {alert.RuleAuthor}");
+            }
+
+            if (!string.IsNullOrWhiteSpace(alert.RuleCreatedUtc))
+            {
+                builder.AppendLine($"- Rule Created UTC: {alert.RuleCreatedUtc}");
+            }
+
+            if (alert.RuleTags.Count > 0)
+            {
+                builder.AppendLine($"- Rule Tags: {string.Join(", ", alert.RuleTags)}");
+            }
+
+            if (alert.RuleReferences.Count > 0)
+            {
+                builder.AppendLine("- Rule References:");
+
+                foreach (var reference in alert.RuleReferences)
+                {
+                    builder.AppendLine($"  - {reference}");
+                }
+            }
             builder.AppendLine($"- Hostname: {alert.Hostname}");
             builder.AppendLine($"- Process: {alert.ProcessName}");
             builder.AppendLine($"- Command Line: {alert.CommandLine}");

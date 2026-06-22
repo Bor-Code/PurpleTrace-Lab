@@ -19,4 +19,9 @@ public sealed class DetectionAlert
     public string Reason { get; set; } = string.Empty;
 
     public EndpointEvent? SourceEvent { get; set; }
+
+    public string RuleAuthor { get; set; } = string.Empty;
+    public string RuleCreatedUtc { get; set; } = string.Empty;
+    public List<string> RuleTags { get; set; } = new();
+    public List<string> RuleReferences { get; set; } = new();
 }
