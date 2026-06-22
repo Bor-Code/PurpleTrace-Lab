@@ -110,6 +110,14 @@ public static class CliOptionsParser
                 continue;
             }
 
+            if ((current.Equals("--rule-id", StringComparison.OrdinalIgnoreCase) ||
+                 current.Equals("--rule", StringComparison.OrdinalIgnoreCase)) && i + 1 < args.Length)
+            {
+                options.RuleId = args[i + 1];
+                i++;
+                continue;
+            }
+
             if (current.Equals("--max", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
             {
                 if (int.TryParse(args[i + 1], out var maxEvents))
