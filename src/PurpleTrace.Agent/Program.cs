@@ -3,21 +3,25 @@ using PurpleTrace.Agent;
 using PurpleTrace.Agent.Collectors;
 using PurpleTrace.Agent.Detection;
 using PurpleTrace.Agent.Exporters;
+using PurpleTrace.Agent.Models;
 
 var cliOptions = CliOptionsParser.Parse(args);
 
 var rulesDirectory = ResolvePath(cliOptions.RulesDirectory);
-var eventPath = ResolvePath(cliOptions.EventPath);
 var outputPath = ResolvePath(cliOptions.OutputPath);
 
 var ruleLoader = new RuleLoader();
 var rules = ruleLoader.LoadFromDirectory(rulesDirectory);
 
-var eventLoader = new EndpointEventLoader();
-var endpointEvent = eventLoader.LoadFromJsonFile(eventPath);
+var endpointEvents = LoadEndpointEvents(cliOptions);
 
 var engine = new DetectionEngine(rules);
-var alerts = engine.Analyze(endpointEvent);
+var alerts = new List<DetectionAlert>();
+
+foreach (var endpointEvent in endpointEvents)
+{
+    alerts.AddRange(engine.Analyze(endpointEvent));
+}
 
 var exporter = new JsonAlertExporter();
 exporter.Export(outputPath, alerts);
@@ -27,15 +31,42 @@ var options = new JsonSerializerOptions
     WriteIndented = true
 };
 
-Console.WriteLine("PurpleTrace Agent - Sample Event Detection Pipeline");
+Console.WriteLine("PurpleTrace Agent - Sysmon Detection Pipeline");
 Console.WriteLine();
+Console.WriteLine($"Source: {cliOptions.Source}");
 Console.WriteLine($"Rules directory: {rulesDirectory}");
-Console.WriteLine($"Event path: {eventPath}");
 Console.WriteLine($"Output path: {outputPath}");
 Console.WriteLine($"Loaded rules: {rules.Count}");
+Console.WriteLine($"Loaded events: {endpointEvents.Count}");
 Console.WriteLine($"Generated alerts: {alerts.Count}");
 Console.WriteLine();
 Console.WriteLine(JsonSerializer.Serialize(alerts, options));
+
+static List<EndpointEvent> LoadEndpointEvents(CliOptions cliOptions)
+{
+    if (cliOptions.Source.Equals("sysmon", StringComparison.OrdinalIgnoreCase))
+    {
+        try
+        {
+            var collector = new SysmonProcessCollector();
+            return collector.GetRecentProcessCreateEvents(cliOptions.MaxEvents);
+        }
+        catch (Exception exception)
+        {
+            Console.WriteLine("Could not read Sysmon events.");
+            Console.WriteLine("Make sure Sysmon is installed and the Microsoft-Windows-Sysmon/Operational log exists.");
+            Console.WriteLine($"Error: {exception.Message}");
+            return new List<EndpointEvent>();
+        }
+    }
+
+    var eventPath = ResolvePath(cliOptions.EventPath);
+    var loader = new EndpointEventLoader();
+    return new List<EndpointEvent>
+    {
+        loader.LoadFromJsonFile(eventPath)
+    };
+}
 
 static string ResolvePath(string path)
 {

@@ -32,6 +32,24 @@ public static class CliOptionsParser
                 i++;
                 continue;
             }
+
+            if (current.Equals("--source", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+            {
+                options.Source = args[i + 1];
+                i++;
+                continue;
+            }
+
+            if (current.Equals("--max", StringComparison.OrdinalIgnoreCase) && i + 1 < args.Length)
+            {
+                if (int.TryParse(args[i + 1], out var maxEvents))
+                {
+                    options.MaxEvents = maxEvents;
+                }
+
+                i++;
+                continue;
+            }
         }
 
         return options;
