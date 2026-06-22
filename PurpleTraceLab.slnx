@@ -3,4 +3,7 @@
     <Project Path="src/PurpleTrace.Agent/PurpleTrace.Agent.csproj" />
     <Project Path="src/PurpleTrace.Simulator/PurpleTrace.Simulator.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PurpleTrace.Agent.Tests/PurpleTrace.Agent.Tests.csproj" />
+  </Folder>
 </Solution>
