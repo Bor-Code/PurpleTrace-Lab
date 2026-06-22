@@ -1,8 +1,10 @@
 using System.Text.Json;
 using PurpleTrace.Agent.Detection;
+using PurpleTrace.Agent.Exporters;
 using PurpleTrace.Agent.Models;
 
 var rulesDirectory = ResolveRulesDirectory();
+var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "samples", "latest-alerts.json");
 
 var loader = new RuleLoader();
 var rules = loader.LoadFromDirectory(rulesDirectory);
@@ -26,15 +28,19 @@ var endpointEvent = new EndpointEvent
 var engine = new DetectionEngine(rules);
 var alerts = engine.Analyze(endpointEvent);
 
+var exporter = new JsonAlertExporter();
+exporter.Export(outputPath, alerts);
+
 var options = new JsonSerializerOptions
 {
     WriteIndented = true
 };
 
-Console.WriteLine("PurpleTrace Agent - JSON Rule Loader Test");
+Console.WriteLine("PurpleTrace Agent - JSON Alert Export Test");
 Console.WriteLine();
 Console.WriteLine($"Loaded rules: {rules.Count}");
 Console.WriteLine($"Generated alerts: {alerts.Count}");
+Console.WriteLine($"Export path: {outputPath}");
 Console.WriteLine();
 Console.WriteLine(JsonSerializer.Serialize(alerts, options));
 
