@@ -1,0 +1,9 @@
+{
+  "Source": "sample",
+  "RulesDirectory": "rules",
+  "EventPath": "samples/sample-event-batch.json",
+  "OutputPath": "samples/config-alerts.local.json",
+  "ReportPath": "samples/config-report.local.md",
+  "CsvPath": "samples/config-alerts.local.csv",
+  "MaxEvents": 20
+}

@@ -1,6 +1,7 @@
 using System.Text.Json;
 using PurpleTrace.Agent;
 using PurpleTrace.Agent.Collectors;
+using PurpleTrace.Agent.Config;
 using PurpleTrace.Agent.Detection;
 using PurpleTrace.Agent.Exporters;
 using PurpleTrace.Agent.Models;
@@ -12,6 +13,8 @@ if (cliOptions.ShowHelp)
     CliHelp.Print();
     return;
 }
+
+ApplyConfigIfProvided(cliOptions);
 
 if (!IsValidSource(cliOptions.Source))
 {
@@ -66,6 +69,26 @@ Console.WriteLine($"Loaded events: {endpointEvents.Count}");
 Console.WriteLine($"Generated alerts: {alerts.Count}");
 Console.WriteLine();
 Console.WriteLine(JsonSerializer.Serialize(alerts, options));
+
+static void ApplyConfigIfProvided(CliOptions cliOptions)
+{
+    if (string.IsNullOrWhiteSpace(cliOptions.ConfigPath))
+    {
+        return;
+    }
+
+    var configPath = ResolvePath(cliOptions.ConfigPath);
+    var loader = new AgentConfigLoader();
+    var config = loader.Load(configPath);
+
+    cliOptions.RulesDirectory = config.RulesDirectory;
+    cliOptions.EventPath = config.EventPath;
+    cliOptions.OutputPath = config.OutputPath;
+    cliOptions.ReportPath = config.ReportPath;
+    cliOptions.CsvPath = config.CsvPath;
+    cliOptions.Source = config.Source;
+    cliOptions.MaxEvents = config.MaxEvents;
+}
 
 static bool IsValidSource(string source)
 {

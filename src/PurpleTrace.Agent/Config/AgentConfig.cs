@@ -1,8 +1,7 @@
-namespace PurpleTrace.Agent.Models;
+namespace PurpleTrace.Agent.Config;
 
-public sealed class CliOptions
+public sealed class AgentConfig
 {
-    public string ConfigPath { get; set; } = string.Empty;
     public string RulesDirectory { get; set; } = "rules";
     public string EventPath { get; set; } = "samples/sample-powershell-event.json";
     public string OutputPath { get; set; } = "samples/latest-alerts.local.json";
@@ -10,5 +9,4 @@ public sealed class CliOptions
     public string CsvPath { get; set; } = "samples/latest-alerts.local.csv";
     public string Source { get; set; } = "sample";
     public int MaxEvents { get; set; } = 20;
-    public bool ShowHelp { get; set; }
 }
