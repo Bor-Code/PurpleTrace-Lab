@@ -1,4 +1,5 @@
 using System.Text.Json;
+using PurpleTrace.Agent.Detection;
 using PurpleTrace.Agent.Models;
 
 var endpointEvent = new EndpointEvent
@@ -17,26 +18,59 @@ var endpointEvent = new EndpointEvent
     ParentCommandLine = "cmd.exe"
 };
 
-var alert = new DetectionAlert
+var rules = new List<DetectionRule>
 {
-    RuleId = "PT-RULE-001",
-    RuleName = "Suspicious PowerShell Execution",
-    Severity = "High",
-    MitreTactic = "Execution",
-    MitreTechniqueId = "T1059.001",
-    MitreTechniqueName = "PowerShell",
-    Hostname = endpointEvent.Hostname,
-    ProcessName = endpointEvent.ProcessName,
-    CommandLine = endpointEvent.CommandLine,
-    Reason = "PowerShell executed with suspicious command-line arguments.",
-    SourceEvent = endpointEvent
+    new DetectionRule
+    {
+        Id = "PT-RULE-001",
+        Title = "Suspicious PowerShell Execution",
+        Description = "PowerShell executed with suspicious command-line arguments.",
+        Severity = "High",
+        MitreTactic = "Execution",
+        MitreTechniqueId = "T1059.001",
+        MitreTechniqueName = "PowerShell",
+        ProcessNameContains = new List<string>
+        {
+            "powershell.exe",
+            "pwsh.exe"
+        },
+        CommandLineContains = new List<string>
+        {
+            "-NoProfile",
+            "ExecutionPolicy Bypass",
+            "-enc",
+            "-nop"
+        }
+    },
+
+    new DetectionRule
+    {
+        Id = "PT-RULE-002",
+        Title = "Command Shell Started PowerShell",
+        Description = "PowerShell was launched from cmd.exe, which may indicate scripted execution.",
+        Severity = "Medium",
+        MitreTactic = "Execution",
+        MitreTechniqueId = "T1059",
+        MitreTechniqueName = "Command and Scripting Interpreter",
+        ProcessNameContains = new List<string>
+        {
+            "powershell.exe"
+        },
+        ParentProcessNameContains = new List<string>
+        {
+            "cmd.exe"
+        }
+    }
 };
+
+var engine = new DetectionEngine(rules);
+var alerts = engine.Analyze(endpointEvent);
 
 var options = new JsonSerializerOptions
 {
     WriteIndented = true
 };
 
-Console.WriteLine("PurpleTrace Agent - Endpoint Event Model Test");
+Console.WriteLine("PurpleTrace Agent - Detection Engine Test");
 Console.WriteLine();
-Console.WriteLine(JsonSerializer.Serialize(alert, options));
+Console.WriteLine(JsonSerializer.Serialize(alerts, options));
