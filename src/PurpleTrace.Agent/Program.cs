@@ -15,6 +15,7 @@ if (cliOptions.ShowHelp)
 }
 
 ApplyConfigIfProvided(cliOptions);
+CliOptionsParser.ApplyCommandLineOverrides(cliOptions, args);
 
 if (!IsValidSource(cliOptions.Source))
 {
