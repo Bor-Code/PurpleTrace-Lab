@@ -8,5 +8,6 @@
   "HtmlPath": "samples/config-report.local.html",
   "MinSeverity": "",
   "MitreTechniqueId": "",
+  "RuleId": "",
   "MaxEvents": 20
 }
