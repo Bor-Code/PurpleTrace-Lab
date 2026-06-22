@@ -7,9 +7,11 @@ public static class CliHelp
         Console.WriteLine("PurpleTrace Agent");
         Console.WriteLine();
         Console.WriteLine("Usage:");
+        Console.WriteLine("  PurpleTrace.Agent --config config/purpletrace.sample.json");
         Console.WriteLine("  PurpleTrace.Agent --source sample --rules rules --event samples/sample-powershell-event.json --out samples/alerts.local.json --report samples/report.local.md --csv samples/alerts.local.csv");
         Console.WriteLine();
         Console.WriteLine("Options:");
+        Console.WriteLine("  --config    JSON config file path");
         Console.WriteLine("  --source    Event source mode. Supported values: sample, sysmon");
         Console.WriteLine("  --rules     Detection rules directory");
         Console.WriteLine("  --event     Sample endpoint event JSON file");
@@ -20,7 +22,7 @@ public static class CliHelp
         Console.WriteLine("  --help      Show help");
         Console.WriteLine();
         Console.WriteLine("Examples:");
+        Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --config config/purpletrace.sample.json");
         Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --source sample --rules rules --event samples/sample-recon-event.json --out samples/recon-alerts.local.json --report samples/recon-report.local.md --csv samples/recon-alerts.local.csv");
-        Console.WriteLine("  dotnet run --project src\\PurpleTrace.Agent -- --source sysmon --rules rules --max 20 --out samples/sysmon-alerts.local.json --report samples/sysmon-report.local.md --csv samples/sysmon-alerts.local.csv");
     }
 }
