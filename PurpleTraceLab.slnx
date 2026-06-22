@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PurpleTrace.Agent/PurpleTrace.Agent.csproj" />
+    <Project Path="src/PurpleTrace.Simulator/PurpleTrace.Simulator.csproj" />
+  </Folder>
+</Solution>
