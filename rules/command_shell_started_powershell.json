@@ -1,0 +1,16 @@
+{
+  "Id": "PT-RULE-002",
+  "Title": "Command Shell Started PowerShell",
+  "Description": "PowerShell was launched from cmd.exe, which may indicate scripted execution.",
+  "Severity": "Medium",
+  "MitreTactic": "Execution",
+  "MitreTechniqueId": "T1059",
+  "MitreTechniqueName": "Command and Scripting Interpreter",
+  "ProcessNameContains": [
+    "powershell.exe"
+  ],
+  "CommandLineContains": [],
+  "ParentProcessNameContains": [
+    "cmd.exe"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "Id": "PT-RULE-001",
+  "Title": "Suspicious PowerShell Execution",
+  "Description": "PowerShell executed with suspicious command-line arguments.",
+  "Severity": "High",
+  "MitreTactic": "Execution",
+  "MitreTechniqueId": "T1059.001",
+  "MitreTechniqueName": "PowerShell",
+  "ProcessNameContains": [
+    "powershell.exe",
+    "pwsh.exe"
+  ],
+  "CommandLineContains": [
+    "-NoProfile",
+    "ExecutionPolicy Bypass",
+    "-enc",
+    "-nop"
+  ],
+  "ParentProcessNameContains": []
+}
