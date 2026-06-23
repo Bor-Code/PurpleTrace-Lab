@@ -1,0 +1,19 @@
+{
+  "Source": "Sample",
+  "EventId": 1,
+  "EventType": 1,
+  "Hostname": "BORAN",
+  "UserName": "nonmr",
+  "ProcessId": 7300,
+  "ProcessName": "certutil.exe",
+  "ProcessPath": "C:\\Windows\\System32\\certutil.exe",
+  "CommandLine": "certutil.exe -urlcache -f https://example.com/SAFE_SAMPLE_ONLY.txt SAFE_SAMPLE_ONLY.txt",
+  "ParentProcessId": 3200,
+  "ParentProcessName": "cmd.exe",
+  "ParentProcessPath": "C:\\Windows\\System32\\cmd.exe",
+  "ParentCommandLine": "cmd.exe",
+  "DestinationIp": "",
+  "DestinationPort": 0,
+  "Protocol": "",
+  "AdditionalData": {}
+}
