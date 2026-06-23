@@ -29,3 +29,8 @@ samples/*simulator*.local.json
 samples/*simulator*.local.md
 samples/*simulator*.local.csv
 samples/*simulator*.local.html
+
+# Node local dependencies
+node_modules/
+console/node_modules/
+console/dist/
