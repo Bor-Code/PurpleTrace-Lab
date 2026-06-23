@@ -1,15 +1,15 @@
 # PurpleTrace Rule Coverage
 
-Generated UTC: 2026-06-23 14:32:39
+Generated UTC: 2026-06-23 14:35:36
 
-Total Rules: 6
+Total Rules: 7
 
 ## Severity Coverage
 
 | Severity | Count |
 |---|---|
 | High | 3 |
-| Medium | 3 |
+| Medium | 4 |
 
 ## MITRE Coverage
 
@@ -20,6 +20,7 @@ Total Rules: 6
 | T1059.001 | PowerShell | 2 |
 | T1082 | System Information Discovery | 1 |
 | T1105 | Ingress Tool Transfer | 1 |
+| T1218.011 | Rundll32 | 1 |
 
 ## Tag Coverage
 
@@ -27,17 +28,19 @@ Total Rules: 6
 |---|---|
 | certutil | 1 |
 | cmd | 2 |
-| command-line | 4 |
+| command-line | 5 |
 | discovery | 2 |
 | download | 1 |
 | encoded-command | 1 |
 | execution | 3 |
-| living-off-the-land | 1 |
+| living-off-the-land | 2 |
 | powershell | 3 |
 | reconnaissance | 1 |
 | reg | 1 |
 | registry | 1 |
-| windows | 6 |
+| rundll32 | 1 |
+| url-handler | 1 |
+| windows | 7 |
 
 ## Rule Table
 
@@ -49,6 +52,7 @@ Total Rules: 6
 | PT-RULE-004 | Encoded PowerShell Command | High | T1059.001 PowerShell | powershell, encoded-command, execution, windows, command-line |
 | PT-RULE-005 | Certutil Download Pattern | High | T1105 Ingress Tool Transfer | certutil, download, living-off-the-land, windows, command-line |
 | PT-RULE-006 | Windows Registry Discovery Command | Medium | T1012 Query Registry | registry, discovery, windows, reg, command-line |
+| PT-RULE-007 | Rundll32 URL Handler Usage | Medium | T1218.011 Rundll32 | rundll32, living-off-the-land, windows, url-handler, command-line |
 
 ## Rule Details
 
@@ -179,4 +183,25 @@ CommandLineContains:
 
 References:
 - MITRE ATT&CK T1012 - Query Registry
+
+### PT-RULE-007 - Rundll32 URL Handler Usage
+
+- Severity: Medium
+- MITRE Tactic: Defense Evasion
+- MITRE Technique: T1218.011 - Rundll32
+- Author: PurpleTrace Lab
+- Created UTC: 2026-06-22T00:00:00Z
+- Tags: rundll32, living-off-the-land, windows, url-handler, command-line
+- Description: Detects rundll32 execution patterns involving URL handler behavior.
+
+ProcessNameContains:
+- `rundll32.exe`
+
+CommandLineContains:
+- `url.dll,FileProtocolHandler`
+- `http`
+- `https`
+
+References:
+- MITRE ATT&CK T1218.011 - Rundll32
 
