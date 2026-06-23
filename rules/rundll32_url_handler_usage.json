@@ -1,0 +1,30 @@
+{
+  "Id": "PT-RULE-007",
+  "Title": "Rundll32 URL Handler Usage",
+  "Description": "Detects rundll32 execution patterns involving URL handler behavior.",
+  "Severity": "Medium",
+  "MitreTactic": "Defense Evasion",
+  "MitreTechniqueId": "T1218.011",
+  "MitreTechniqueName": "Rundll32",
+  "Author": "PurpleTrace Lab",
+  "CreatedUtc": "2026-06-22T00:00:00Z",
+  "Tags": [
+    "rundll32",
+    "living-off-the-land",
+    "windows",
+    "url-handler",
+    "command-line"
+  ],
+  "References": [
+    "MITRE ATT&CK T1218.011 - Rundll32"
+  ],
+  "ProcessNameContains": [
+    "rundll32.exe"
+  ],
+  "CommandLineContains": [
+    "url.dll,FileProtocolHandler",
+    "http",
+    "https"
+  ],
+  "ParentProcessNameContains": []
+}
