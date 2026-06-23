@@ -1,0 +1,19 @@
+{
+  "Source": "Sample",
+  "EventId": 1,
+  "EventType": 1,
+  "Hostname": "BORAN",
+  "UserName": "nonmr",
+  "ProcessId": 10100,
+  "ProcessName": "sc.exe",
+  "ProcessPath": "C:\\Windows\\System32\\sc.exe",
+  "CommandLine": "sc.exe query type= service state= all",
+  "ParentProcessId": 3500,
+  "ParentProcessName": "cmd.exe",
+  "ParentProcessPath": "C:\\Windows\\System32\\cmd.exe",
+  "ParentCommandLine": "cmd.exe",
+  "DestinationIp": "",
+  "DestinationPort": 0,
+  "Protocol": "",
+  "AdditionalData": {}
+}
