@@ -292,3 +292,25 @@ Additional documentation:
 PurpleTrace Lab is currently a portfolio-ready defensive detection engineering lab.
 
 The next improvements are focused on documentation, screenshots, rule coverage, and release packaging rather than adding unnecessary features.
+
+---
+
+## Synthetic Telemetry Simulator
+
+PurpleTrace Lab includes a safe synthetic telemetry simulator.
+
+The simulator writes JSON or JSONL endpoint-style events without executing commands or performing system changes.
+
+Generate simulated telemetry:
+
+```powershell
+dotnet run --project src\PurpleTrace.Simulator -- --scenario all --format jsonl --out samples\simulated-events.local.jsonl
+```
+
+Analyze simulated telemetry:
+
+```powershell
+dotnet run --project src\PurpleTrace.Agent -- --source sample --rules rules --event samples\simulated-events.local.jsonl --out samples\simulator-alerts.local.json --report samples\simulator-report.local.md --csv samples\simulator-alerts.local.csv --html samples\simulator-report.local.html --summary samples\simulator-summary.local.json
+```
+
+More details: [PurpleTrace Simulator](docs/simulator.md)

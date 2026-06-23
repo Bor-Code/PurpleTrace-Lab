@@ -21,3 +21,11 @@ samples/*.local.md
 samples/*.local.csv
 
 samples/*.local.html
+
+# PurpleTrace local simulator outputs
+samples/*simulated*.local.json
+samples/*simulated*.local.jsonl
+samples/*simulator*.local.json
+samples/*simulator*.local.md
+samples/*simulator*.local.csv
+samples/*simulator*.local.html
