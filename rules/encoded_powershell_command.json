@@ -1,0 +1,29 @@
+{
+  "Id": "PT-RULE-004",
+  "Title": "Encoded PowerShell Command",
+  "Description": "Detects PowerShell execution using encoded command arguments.",
+  "Severity": "High",
+  "MitreTactic": "Execution",
+  "MitreTechniqueId": "T1059.001",
+  "MitreTechniqueName": "PowerShell",
+  "Author": "PurpleTrace Lab",
+  "CreatedUtc": "2026-06-22T00:00:00Z",
+  "Tags": [
+    "powershell",
+    "encoded-command",
+    "execution",
+    "windows",
+    "command-line"
+  ],
+  "References": [
+    "MITRE ATT&CK T1059.001 - PowerShell"
+  ],
+  "ProcessNameContains": [
+    "powershell.exe"
+  ],
+  "CommandLineContains": [
+    "-EncodedCommand",
+    "-enc"
+  ],
+  "ParentProcessNameContains": []
+}

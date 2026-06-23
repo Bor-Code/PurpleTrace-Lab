@@ -1,0 +1,19 @@
+{
+  "Source": "Sample",
+  "EventId": 1,
+  "EventType": 1,
+  "Hostname": "BORAN",
+  "UserName": "nonmr",
+  "ProcessId": 6200,
+  "ProcessName": "powershell.exe",
+  "ProcessPath": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  "CommandLine": "powershell.exe -NoProfile -EncodedCommand SAFE_SAMPLE_ONLY",
+  "ParentProcessId": 3100,
+  "ParentProcessName": "explorer.exe",
+  "ParentProcessPath": "C:\\Windows\\explorer.exe",
+  "ParentCommandLine": "explorer.exe",
+  "DestinationIp": "",
+  "DestinationPort": 0,
+  "Protocol": "",
+  "AdditionalData": {}
+}
