@@ -2,9 +2,33 @@
 
 PurpleTrace Lab is a defensive Windows endpoint telemetry and detection engineering lab built for safe Purple Team learning.
 
-The project loads endpoint-style events, applies JSON-based detection rules, enriches alerts with MITRE ATT&CK metadata, and exports the results into analyst-friendly reports.
+The project loads endpoint-style events, applies JSON-based detection rules, enriches alerts with MITRE ATT&CK metadata, and exports the results into analyst-friendly reports, dashboards, and investigation workflows.
 
-> This project is defensive-only. It does not contain malware, exploit code, evasion logic, shellcode, process injection, credential theft, or offensive payloads.
+> This project is defensive-only. It does not contain malware, exploit code, evasion logic, shellcode, process injection, credential theft, persistence logic, or offensive payloads.
+
+---
+
+## PurpleTrace Lab v0.2.0
+
+PurpleTrace Lab v0.2.0 turns the project into a more complete defensive detection engineering lab.
+
+The project now includes:
+
+* Safe synthetic telemetry generation
+* JSON-based detection rules
+* MITRE ATT&CK metadata
+* JSON, Markdown, CSV, HTML, summary, and investigation report exports
+* Local browser-based detection dashboard
+* Professional React-based PurpleTrace Console
+* Structured analyst investigation workflow
+* Rule coverage documentation
+* Defensive-only demo flow
+
+Recommended demo flow:
+
+```text
+Simulator -> Agent -> Reports -> Dashboard -> Investigation Report
+```
 
 ---
 
@@ -64,6 +88,46 @@ The dashboard includes detection examples for Windows registry discovery and Run
 
 PurpleTrace includes service discovery detection coverage and displays command-line evidence, tags, severity, and MITRE mapping.
 
+---
+
+## PurpleTrace Console
+
+PurpleTrace Console is a professional local browser-based security interface for PurpleTrace Lab.
+
+It provides a modern analyst-style UI for reviewing detection alerts, MITRE ATT&CK mappings, rule coverage, report outputs, and investigation workflow.
+
+The console includes:
+
+* Security overview dashboard
+* Alert review workspace
+* Searchable alert list
+* Severity, MITRE, and rule distribution charts
+* Detection rule catalog
+* Investigation workspace
+* Reports overview
+* Local JSON alert upload support
+* Defensive-only safety scope page
+
+Run the console locally:
+
+```powershell
+cd console
+npm install
+npm run dev
+```
+
+Build the console:
+
+```powershell
+cd console
+npm install
+npm run build
+cd ..
+```
+
+PurpleTrace Console is designed as a local security product-style interface. It does not upload alert data anywhere.
+
+---
 
 ## What This Project Demonstrates
 
@@ -76,21 +140,27 @@ PurpleTrace Lab demonstrates practical skills in:
 * Alert enrichment
 * CLI tool development
 * Report generation
+* Investigation workflow design
+* React-based security UI development
 * Unit testing
 * GitHub Actions CI
+* Safe Purple Team learning
 
 ---
 
 ## Features
 
-* Sample endpoint event loading
-* Batch JSON event loading
-* JSONL / NDJSON event loading
-* Sysmon process creation event collection
-* JSON detection rule loading
+PurpleTrace Lab currently supports:
+
+* Loading sample endpoint telemetry from JSON files
+* Loading batch endpoint telemetry from JSON arrays
+* Loading JSONL / NDJSON event files
+* Reading Sysmon process creation events on Windows
+* Loading JSON-based detection rules
 * Rule validation
 * Rule catalog listing
-* Severity-based alert filtering
+* Rule coverage export
+* Severity filtering
 * MITRE technique filtering
 * Rule ID filtering
 * Rule tag filtering
@@ -99,9 +169,29 @@ PurpleTrace Lab demonstrates practical skills in:
 * Markdown report export
 * CSV alert export
 * HTML report export
-* Detection run summary export
+* JSON run summary export
+* Markdown investigation report export
+* Safe synthetic telemetry simulation
+* Local browser-based dashboard
+* Professional PurpleTrace Console UI
+* Structured investigation workflow
 * Unit tests with xUnit
 * GitHub Actions build workflow
+
+---
+
+## Current Detection Coverage
+
+PurpleTrace Lab currently includes detection coverage for:
+
+* Suspicious PowerShell execution
+* Command shell started PowerShell
+* Windows discovery commands
+* Encoded PowerShell command
+* Certutil download pattern
+* Registry discovery command
+* Rundll32 URL handler usage
+* Windows service discovery command
 
 ---
 
@@ -111,18 +201,27 @@ PurpleTrace Lab demonstrates practical skills in:
 PurpleTrace-Lab/
 ├── config/
 │   └── purpletrace.sample.json
+├── console/
+│   └── React-based PurpleTrace Console UI
+├── dashboard/
+│   └── Local HTML/CSS/JS detection dashboard
 ├── docs/
+│   ├── assets/
+│   ├── demo-guide.md
+│   ├── investigation-workflow.md
+│   ├── project-overview.md
+│   ├── rule-coverage.md
+│   ├── simulator.md
+│   └── v0.2.0-release-notes.md
 ├── rules/
-│   ├── suspicious_powershell.json
-│   ├── command_shell_started_powershell.json
-│   └── windows_discovery_commands.json
+│   └── JSON detection rules
 ├── samples/
-│   ├── sample-powershell-event.json
-│   ├── sample-recon-event.json
-│   ├── sample-event-batch.json
-│   └── sample-event-batch.jsonl
+│   └── Safe sample telemetry and local output examples
 ├── src/
-│   └── PurpleTrace.Agent/
+│   ├── PurpleTrace.Agent/
+│   └── PurpleTrace.Simulator/
+├── templates/
+│   └── investigation-case-template.md
 ├── tests/
 │   └── PurpleTrace.Agent.Tests/
 └── README.md
@@ -170,6 +269,7 @@ When a rule matches, the generated alert includes:
 
 * Windows
 * .NET SDK
+* Node.js and npm for PurpleTrace Console
 * Optional: Sysmon for real Windows event log collection
 
 Check your .NET installation:
@@ -178,13 +278,31 @@ Check your .NET installation:
 dotnet --version
 ```
 
+Check your Node.js installation:
+
+```powershell
+node --version
+npm --version
+```
+
 ---
 
 ## Build and Test
 
+Build and test the .NET solution:
+
 ```powershell
 dotnet build
 dotnet test
+```
+
+Build PurpleTrace Console:
+
+```powershell
+cd console
+npm install
+npm run build
+cd ..
 ```
 
 ---
@@ -206,6 +324,94 @@ Exported alerts: 3
 
 ---
 
+## Synthetic Telemetry Simulator
+
+PurpleTrace Lab includes a safe synthetic telemetry simulator.
+
+The simulator writes JSON or JSONL endpoint-style events without executing commands or performing system changes.
+
+Generate simulated telemetry:
+
+```powershell
+dotnet run --project src\PurpleTrace.Simulator -- --scenario all --format jsonl --out samples\simulated-events.local.jsonl
+```
+
+Analyze simulated telemetry:
+
+```powershell
+dotnet run --project src\PurpleTrace.Agent -- --source sample --rules rules --event samples\simulated-events.local.jsonl --out samples\simulator-alerts.local.json --report samples\simulator-report.local.md --csv samples\simulator-alerts.local.csv --html samples\simulator-report.local.html --summary samples\simulator-summary.local.json --investigation samples\simulator-investigation.local.md
+```
+
+More details:
+
+```text
+docs/simulator.md
+```
+
+---
+
+## Local Detection Dashboard
+
+PurpleTrace Lab includes a local browser dashboard for reviewing exported alert JSON files.
+
+Open the dashboard:
+
+```powershell
+start dashboard\index.html
+```
+
+Then load an alert file such as:
+
+```text
+samples\simulator-alerts.local.json
+```
+
+The dashboard displays:
+
+* Total alerts
+* High alerts
+* MITRE technique count
+* Detection rule count
+* Severity distribution
+* MITRE technique distribution
+* Rule distribution
+* Searchable alert cards
+* Command-line evidence
+* Evidence summaries
+* Rule tags
+
+The dashboard runs locally in the browser and does not upload data anywhere.
+
+---
+
+## PurpleTrace Console Usage
+
+PurpleTrace Console is the modern application-style interface for the project.
+
+Run it locally:
+
+```powershell
+cd console
+npm install
+npm run dev
+```
+
+Then open the URL shown in the terminal, usually:
+
+```text
+http://localhost:5173
+```
+
+Build it for production:
+
+```powershell
+cd console
+npm run build
+cd ..
+```
+
+---
+
 ## List Rules
 
 ```powershell
@@ -222,10 +428,18 @@ dotnet run --project src\PurpleTrace.Agent -- --validate-rules --rules rules
 
 ---
 
+## Export Rule Coverage
+
+```powershell
+dotnet run --project src\PurpleTrace.Agent -- --export-rule-coverage docs\rule-coverage.md --rules rules
+```
+
+---
+
 ## Run with JSONL Events
 
 ```powershell
-dotnet run --project src\PurpleTrace.Agent -- --source sample --rules rules --event samples\sample-event-batch.jsonl --out samples\jsonl-alerts.local.json --report samples\jsonl-report.local.md --csv samples\jsonl-alerts.local.csv --html samples\jsonl-report.local.html --summary samples\jsonl-summary.local.json
+dotnet run --project src\PurpleTrace.Agent -- --source sample --rules rules --event samples\sample-event-batch.jsonl --out samples\jsonl-alerts.local.json --report samples\jsonl-report.local.md --csv samples\jsonl-alerts.local.csv --html samples\jsonl-report.local.html --summary samples\jsonl-summary.local.json --investigation samples\jsonl-investigation.local.md
 ```
 
 ---
@@ -268,6 +482,7 @@ samples/config-report.local.md
 samples/config-alerts.local.csv
 samples/config-report.local.html
 samples/config-summary.local.json
+samples/investigation-report.local.md
 ```
 
 These local generated files are intended for testing and are ignored by Git.
@@ -307,64 +522,14 @@ Detect suspicious PowerShell execution patterns from endpoint process creation t
 
 PurpleTrace Lab can generate multiple output formats:
 
-| Format       | Purpose                                             |
-| ------------ | --------------------------------------------------- |
-| JSON         | Machine-readable alert output                       |
-| Markdown     | Analyst-readable report                             |
-| CSV          | Spreadsheet-friendly alert export                   |
-| HTML         | Visual report for review and portfolio presentation |
-| Summary JSON | Machine-readable run summary                        |
-
----
-
-## Safety Scope
-
-This project is designed for defensive security education and portfolio demonstration.
-
-It does not perform exploitation, persistence, privilege escalation, credential theft, evasion, malware execution, or unauthorized activity.
-
-The included sample events are static telemetry examples used to test detection logic safely.
-
----
-
-## Documentation
-
-Additional documentation:
-
-* [Project Overview](docs/project-overview.md)
-* [How to Explain This Project](docs/how-to-explain.md)
-* [Safety Scope](docs/safety.md)
-* [Roadmap](docs/roadmap.md)
-
----
-
-## Current Status
-
-PurpleTrace Lab is currently a portfolio-ready defensive detection engineering lab.
-
-The next improvements are focused on documentation, screenshots, rule coverage, and release packaging rather than adding unnecessary features.
-
----
-
-## Synthetic Telemetry Simulator
-
-PurpleTrace Lab includes a safe synthetic telemetry simulator.
-
-The simulator writes JSON or JSONL endpoint-style events without executing commands or performing system changes.
-
-Generate simulated telemetry:
-
-```powershell
-dotnet run --project src\PurpleTrace.Simulator -- --scenario all --format jsonl --out samples\simulated-events.local.jsonl
-```
-
-Analyze simulated telemetry:
-
-```powershell
-dotnet run --project src\PurpleTrace.Agent -- --source sample --rules rules --event samples\simulated-events.local.jsonl --out samples\simulator-alerts.local.json --report samples\simulator-report.local.md --csv samples\simulator-alerts.local.csv --html samples\simulator-report.local.html --summary samples\simulator-summary.local.json
-```
-
-More details: [PurpleTrace Simulator](docs/simulator.md)
+| Format                 | Purpose                                             |
+| ---------------------- | --------------------------------------------------- |
+| JSON                   | Machine-readable alert output                       |
+| Markdown               | Analyst-readable report                             |
+| CSV                    | Spreadsheet-friendly alert export                   |
+| HTML                   | Visual report for review and portfolio presentation |
+| Summary JSON           | Machine-readable run summary                        |
+| Investigation Markdown | Analyst-style investigation report                  |
 
 ---
 
@@ -406,20 +571,13 @@ This component is designed for defensive alert review and portfolio demonstratio
 
 ---
 
-## PurpleTrace Lab v0.2.0
+## Demo Guide
 
-PurpleTrace Lab v0.2.0 turns the project into a more complete defensive detection engineering lab.
+The recommended demo guide is available here:
 
-The project now includes:
-
-* Safe synthetic telemetry generation
-* JSON-based detection rules
-* MITRE ATT&CK metadata
-* JSON, Markdown, CSV, HTML, summary, and investigation report exports
-* Local browser-based detection dashboard
-* Structured analyst investigation workflow
-* Rule coverage documentation
-* Defensive-only demo flow
+```text
+docs/demo-guide.md
+```
 
 Recommended demo flow:
 
@@ -427,73 +585,70 @@ Recommended demo flow:
 Simulator -> Agent -> Reports -> Dashboard -> Investigation Report
 ```
 
-Generate safe synthetic telemetry:
+---
 
-```powershell
-dotnet run --project src\PurpleTrace.Simulator -- --scenario all --format jsonl --out samples\simulated-events.local.jsonl
-```
+## Release Notes
 
-Analyze telemetry and generate reports:
-
-```powershell
-dotnet run --project src\PurpleTrace.Agent -- --source sample --rules rules --event samples\simulated-events.local.jsonl --out samples\simulator-alerts.local.json --report samples\simulator-report.local.md --csv samples\simulator-alerts.local.csv --html samples\simulator-report.local.html --summary samples\simulator-summary.local.json --investigation samples\simulator-investigation.local.md
-```
-
-Open the local dashboard:
-
-```powershell
-start dashboard\index.html
-```
-
-Then load:
+v0.2.0 release notes are available here:
 
 ```text
-samples\simulator-alerts.local.json
-```
-
-Useful documentation:
-
-```text
-docs/demo-guide.md
 docs/v0.2.0-release-notes.md
-docs/investigation-workflow.md
-docs/rule-coverage.md
-docs/simulator.md
 ```
 
 ---
 
-## Current Capabilities
+## Safety Scope
 
-PurpleTrace Lab currently supports:
+This project is designed for defensive security education and portfolio demonstration.
 
-* Loading sample endpoint telemetry from JSON and JSONL files
-* Reading Sysmon process creation events on Windows
-* Loading JSON-based detection rules
-* Rule validation
-* Rule catalog listing
-* Rule coverage export
-* Severity filtering
-* MITRE technique filtering
-* Rule ID filtering
-* Rule tag filtering
-* JSON alert export
-* Markdown report export
-* CSV alert export
-* HTML report export
-* JSON run summary export
-* Markdown investigation report export
-* Safe synthetic telemetry simulation
-* Local browser-based dashboard
-* Structured investigation workflow
+It does not perform or include:
 
-Current detection coverage includes:
+* Exploitation
+* Persistence
+* Privilege escalation
+* Credential theft
+* Evasion
+* Malware execution
+* Process injection
+* Shellcode
+* Destructive behavior
+* Unauthorized activity
 
-* Suspicious PowerShell execution
-* Command shell started PowerShell
-* Windows discovery commands
-* Encoded PowerShell command
-* Certutil download pattern
-* Registry discovery command
-* Rundll32 URL handler usage
-* Windows service discovery command
+The included sample events are static telemetry examples used to test detection logic safely.
+
+---
+
+## Documentation
+
+Additional documentation:
+
+* [Project Overview](docs/project-overview.md)
+* [Demo Guide](docs/demo-guide.md)
+* [PurpleTrace Simulator](docs/simulator.md)
+* [Investigation Workflow](docs/investigation-workflow.md)
+* [Rule Coverage](docs/rule-coverage.md)
+* [How to Explain This Project](docs/how-to-explain.md)
+* [Safety Scope](docs/safety.md)
+* [Roadmap](docs/roadmap.md)
+* [v0.2.0 Release Notes](docs/v0.2.0-release-notes.md)
+
+---
+
+## Current Status
+
+PurpleTrace Lab is currently a portfolio-ready defensive detection engineering lab.
+
+The project includes:
+
+* Detection Agent
+* Synthetic Telemetry Simulator
+* Local Detection Dashboard
+* PurpleTrace Console
+* Rule Coverage Documentation
+* Investigation Workflow
+* Investigation Markdown Exporter
+* Multi-format report outputs
+* MITRE ATT&CK metadata support
+* Safe demo flow for portfolio presentation
+
+Future improvements can focus on packaging, additional safe detections, richer UI workflows, and optional desktop packaging with Tauri.
