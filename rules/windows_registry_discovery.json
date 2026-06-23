@@ -1,0 +1,31 @@
+{
+  "Id": "PT-RULE-006",
+  "Title": "Windows Registry Discovery Command",
+  "Description": "Detects registry query commands commonly used for Windows system or persistence discovery.",
+  "Severity": "Medium",
+  "MitreTactic": "Discovery",
+  "MitreTechniqueId": "T1012",
+  "MitreTechniqueName": "Query Registry",
+  "Author": "PurpleTrace Lab",
+  "CreatedUtc": "2026-06-22T00:00:00Z",
+  "Tags": [
+    "registry",
+    "discovery",
+    "windows",
+    "reg",
+    "command-line"
+  ],
+  "References": [
+    "MITRE ATT&CK T1012 - Query Registry"
+  ],
+  "ProcessNameContains": [
+    "reg.exe"
+  ],
+  "CommandLineContains": [
+    "query",
+    "HKLM",
+    "HKCU",
+    "CurrentVersion\\Run"
+  ],
+  "ParentProcessNameContains": []
+}
