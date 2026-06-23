@@ -1,14 +1,14 @@
 # PurpleTrace Rule Coverage
 
-Generated UTC: 2026-06-23 13:46:14
+Generated UTC: 2026-06-23 13:49:29
 
-Total Rules: 4
+Total Rules: 5
 
 ## Severity Coverage
 
 | Severity | Count |
 |---|---|
-| High | 2 |
+| High | 3 |
 | Medium | 2 |
 
 ## MITRE Coverage
@@ -18,19 +18,23 @@ Total Rules: 4
 | T1059 | Command and Scripting Interpreter | 1 |
 | T1059.001 | PowerShell | 2 |
 | T1082 | System Information Discovery | 1 |
+| T1105 | Ingress Tool Transfer | 1 |
 
 ## Tag Coverage
 
 | Tag | Rule Count |
 |---|---|
+| certutil | 1 |
 | cmd | 2 |
-| command-line | 2 |
+| command-line | 3 |
 | discovery | 1 |
+| download | 1 |
 | encoded-command | 1 |
 | execution | 3 |
+| living-off-the-land | 1 |
 | powershell | 3 |
 | reconnaissance | 1 |
-| windows | 4 |
+| windows | 5 |
 
 ## Rule Table
 
@@ -40,6 +44,7 @@ Total Rules: 4
 | PT-RULE-002 | Command Shell Started PowerShell | Medium | T1059 Command and Scripting Interpreter | powershell, cmd, execution, windows |
 | PT-RULE-003 | Windows Discovery Commands | Medium | T1082 System Information Discovery | discovery, windows, cmd, reconnaissance |
 | PT-RULE-004 | Encoded PowerShell Command | High | T1059.001 PowerShell | powershell, encoded-command, execution, windows, command-line |
+| PT-RULE-005 | Certutil Download Pattern | High | T1105 Ingress Tool Transfer | certutil, download, living-off-the-land, windows, command-line |
 
 ## Rule Details
 
@@ -127,4 +132,25 @@ CommandLineContains:
 
 References:
 - MITRE ATT&CK T1059.001 - PowerShell
+
+### PT-RULE-005 - Certutil Download Pattern
+
+- Severity: High
+- MITRE Tactic: Command and Control
+- MITRE Technique: T1105 - Ingress Tool Transfer
+- Author: PurpleTrace Lab
+- Created UTC: 2026-06-22T00:00:00Z
+- Tags: certutil, download, living-off-the-land, windows, command-line
+- Description: Detects certutil execution with command-line patterns commonly associated with file download activity.
+
+ProcessNameContains:
+- `certutil.exe`
+
+CommandLineContains:
+- `-urlcache`
+- `http`
+- `https`
+
+References:
+- MITRE ATT&CK T1105 - Ingress Tool Transfer
 

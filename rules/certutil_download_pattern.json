@@ -1,0 +1,30 @@
+{
+  "Id": "PT-RULE-005",
+  "Title": "Certutil Download Pattern",
+  "Description": "Detects certutil execution with command-line patterns commonly associated with file download activity.",
+  "Severity": "High",
+  "MitreTactic": "Command and Control",
+  "MitreTechniqueId": "T1105",
+  "MitreTechniqueName": "Ingress Tool Transfer",
+  "Author": "PurpleTrace Lab",
+  "CreatedUtc": "2026-06-22T00:00:00Z",
+  "Tags": [
+    "certutil",
+    "download",
+    "living-off-the-land",
+    "windows",
+    "command-line"
+  ],
+  "References": [
+    "MITRE ATT&CK T1105 - Ingress Tool Transfer"
+  ],
+  "ProcessNameContains": [
+    "certutil.exe"
+  ],
+  "CommandLineContains": [
+    "-urlcache",
+    "http",
+    "https"
+  ],
+  "ParentProcessNameContains": []
+}
