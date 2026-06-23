@@ -1,20 +1,21 @@
 # PurpleTrace Rule Coverage
 
-Generated UTC: 2026-06-23 14:35:36
+Generated UTC: 2026-06-23 14:38:27
 
-Total Rules: 7
+Total Rules: 8
 
 ## Severity Coverage
 
 | Severity | Count |
 |---|---|
 | High | 3 |
-| Medium | 4 |
+| Medium | 5 |
 
 ## MITRE Coverage
 
 | Technique ID | Technique Name | Rule Count |
 |---|---|---|
+| T1007 | System Service Discovery | 1 |
 | T1012 | Query Registry | 1 |
 | T1059 | Command and Scripting Interpreter | 1 |
 | T1059.001 | PowerShell | 2 |
@@ -28,8 +29,8 @@ Total Rules: 7
 |---|---|
 | certutil | 1 |
 | cmd | 2 |
-| command-line | 5 |
-| discovery | 2 |
+| command-line | 6 |
+| discovery | 3 |
 | download | 1 |
 | encoded-command | 1 |
 | execution | 3 |
@@ -39,8 +40,10 @@ Total Rules: 7
 | reg | 1 |
 | registry | 1 |
 | rundll32 | 1 |
+| sc | 1 |
+| service-discovery | 1 |
 | url-handler | 1 |
-| windows | 7 |
+| windows | 8 |
 
 ## Rule Table
 
@@ -53,6 +56,7 @@ Total Rules: 7
 | PT-RULE-005 | Certutil Download Pattern | High | T1105 Ingress Tool Transfer | certutil, download, living-off-the-land, windows, command-line |
 | PT-RULE-006 | Windows Registry Discovery Command | Medium | T1012 Query Registry | registry, discovery, windows, reg, command-line |
 | PT-RULE-007 | Rundll32 URL Handler Usage | Medium | T1218.011 Rundll32 | rundll32, living-off-the-land, windows, url-handler, command-line |
+| PT-RULE-008 | Windows Service Discovery Command | Medium | T1007 System Service Discovery | service-discovery, windows, sc, discovery, command-line |
 
 ## Rule Details
 
@@ -204,4 +208,23 @@ CommandLineContains:
 
 References:
 - MITRE ATT&CK T1218.011 - Rundll32
+
+### PT-RULE-008 - Windows Service Discovery Command
+
+- Severity: Medium
+- MITRE Tactic: Discovery
+- MITRE Technique: T1007 - System Service Discovery
+- Author: PurpleTrace Lab
+- Created UTC: 2026-06-22T00:00:00Z
+- Tags: service-discovery, windows, sc, discovery, command-line
+- Description: Detects Windows service discovery commands using sc.exe query.
+
+ProcessNameContains:
+- `sc.exe`
+
+CommandLineContains:
+- `query`
+
+References:
+- MITRE ATT&CK T1007 - System Service Discovery
 

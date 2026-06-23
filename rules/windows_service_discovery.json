@@ -1,0 +1,28 @@
+{
+  "Id": "PT-RULE-008",
+  "Title": "Windows Service Discovery Command",
+  "Description": "Detects Windows service discovery commands using sc.exe query.",
+  "Severity": "Medium",
+  "MitreTactic": "Discovery",
+  "MitreTechniqueId": "T1007",
+  "MitreTechniqueName": "System Service Discovery",
+  "Author": "PurpleTrace Lab",
+  "CreatedUtc": "2026-06-22T00:00:00Z",
+  "Tags": [
+    "service-discovery",
+    "windows",
+    "sc",
+    "discovery",
+    "command-line"
+  ],
+  "References": [
+    "MITRE ATT&CK T1007 - System Service Discovery"
+  ],
+  "ProcessNameContains": [
+    "sc.exe"
+  ],
+  "CommandLineContains": [
+    "query"
+  ],
+  "ParentProcessNameContains": []
+}
