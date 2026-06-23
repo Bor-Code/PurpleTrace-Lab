@@ -42,6 +42,7 @@ var reportPath = ResolvePath(cliOptions.ReportPath);
 var csvPath = ResolvePath(cliOptions.CsvPath);
 var htmlPath = ResolvePath(cliOptions.HtmlPath);
 var summaryPath = ResolvePath(cliOptions.SummaryPath);
+var investigationPath = ResolvePath(cliOptions.InvestigationPath);
 var ruleCoveragePath = ResolvePath(cliOptions.RuleCoveragePath);
 
 var ruleLoader = new RuleLoader();
@@ -118,6 +119,9 @@ csvExporter.Export(csvPath, alerts);
 var htmlExporter = new HtmlReportExporter();
 htmlExporter.Export(htmlPath, alerts);
 
+var investigationExporter = new InvestigationMarkdownExporter();
+investigationExporter.Export(investigationPath, alerts);
+
 var runSummary = BuildRunSummary(
     cliOptions,
     rulesDirectory,
@@ -149,6 +153,7 @@ Console.WriteLine($"Markdown report path: {reportPath}");
 Console.WriteLine($"CSV output path: {csvPath}");
 Console.WriteLine($"HTML report path: {htmlPath}");
 Console.WriteLine($"Summary output path: {summaryPath}");
+Console.WriteLine($"Investigation report path: {investigationPath}");
 Console.WriteLine($"Loaded rules: {rules.Count}");
 Console.WriteLine($"Loaded events: {endpointEvents.Count}");
 Console.WriteLine($"Detected alerts before filtering: {detectedAlerts.Count}");
