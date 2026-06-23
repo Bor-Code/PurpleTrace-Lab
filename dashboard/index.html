@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PurpleTrace Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">PurpleTrace Lab</p>
+        <h1>Detection Dashboard</h1>
+        <p class="subtitle">
+          Load PurpleTrace JSON alert output and review severity, MITRE technique,
+          rule coverage, and alert evidence in a visual dashboard.
+        </p>
+      </div>
+
+      <div class="upload-card">
+        <label for="alertFile">Load alert JSON</label>
+        <input id="alertFile" type="file" accept=".json,application/json" />
+        <p class="hint">
+          Use files like <code>samples/config-alerts.local.json</code> or
+          <code>samples/simulator-alerts.local.json</code>.
+        </p>
+      </div>
+    </section>
+
+    <section class="metrics">
+      <article class="metric-card">
+        <span class="metric-label">Total Alerts</span>
+        <strong id="totalAlerts">0</strong>
+      </article>
+
+      <article class="metric-card">
+        <span class="metric-label">High Alerts</span>
+        <strong id="highAlerts">0</strong>
+      </article>
+
+      <article class="metric-card">
+        <span class="metric-label">MITRE Techniques</span>
+        <strong id="mitreCount">0</strong>
+      </article>
+
+      <article class="metric-card">
+        <span class="metric-label">Detection Rules</span>
+        <strong id="ruleCount">0</strong>
+      </article>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Severity Distribution</h2>
+        </div>
+        <div id="severityChart" class="bar-list empty">Load an alert file to view severity data.</div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>MITRE Techniques</h2>
+        </div>
+        <div id="mitreChart" class="bar-list empty">Load an alert file to view MITRE data.</div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Rule Distribution</h2>
+        </div>
+        <div id="ruleChart" class="bar-list empty">Load an alert file to view rule data.</div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <h2>Dashboard Notes</h2>
+        </div>
+        <ul class="notes">
+          <li>This dashboard works locally in the browser.</li>
+          <li>No data is uploaded anywhere.</li>
+          <li>It only parses the selected JSON file.</li>
+          <li>Use it for safe alert review and portfolio demos.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Alerts</h2>
+        <input id="searchBox" class="search" type="search" placeholder="Search rule, process, MITRE, evidence..." />
+      </div>
+
+      <div id="alertList" class="alert-list empty">
+        Load a PurpleTrace alert JSON file to display alerts.
+      </div>
+    </section>
+  </main>
+
+  <template id="barTemplate">
+    <div class="bar-row">
+      <div class="bar-top">
+        <span class="bar-name"></span>
+        <span class="bar-count"></span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill"></div>
+      </div>
+    </div>
+  </template>
+
+  <template id="alertTemplate">
+    <article class="alert-card">
+      <div class="alert-top">
+        <div>
+          <p class="alert-rule"></p>
+          <h3 class="alert-title"></h3>
+        </div>
+        <span class="severity-badge"></span>
+      </div>
+
+      <div class="alert-meta">
+        <span class="mitre"></span>
+        <span class="host"></span>
+        <span class="user"></span>
+      </div>
+
+      <div class="alert-command">
+        <span>Command Line</span>
+        <code class="command-line"></code>
+      </div>
+
+      <div class="evidence-box">
+        <strong>Evidence</strong>
+        <p class="evidence-summary"></p>
+      </div>
+
+      <div class="tag-list"></div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
