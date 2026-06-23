@@ -1,9 +1,3 @@
-
-> [!CAUTION]
-> # ⛔🚨 WARNING 🚨⛔
-> ## 🔴 UNDER DEVELOPMENT — PLEASE DO NOT USE! 🔴
-> ### ❌ REVIEW ONLY AND SHARE YOUR THOUGHTS &lt;3 ❌ 
-
 # PurpleTrace Lab
 
 PurpleTrace Lab is a defensive Windows endpoint telemetry and detection engineering lab built for safe Purple Team learning.
