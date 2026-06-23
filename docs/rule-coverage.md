@@ -1,20 +1,21 @@
 # PurpleTrace Rule Coverage
 
-Generated UTC: 2026-06-23 13:49:29
+Generated UTC: 2026-06-23 14:32:39
 
-Total Rules: 5
+Total Rules: 6
 
 ## Severity Coverage
 
 | Severity | Count |
 |---|---|
 | High | 3 |
-| Medium | 2 |
+| Medium | 3 |
 
 ## MITRE Coverage
 
 | Technique ID | Technique Name | Rule Count |
 |---|---|---|
+| T1012 | Query Registry | 1 |
 | T1059 | Command and Scripting Interpreter | 1 |
 | T1059.001 | PowerShell | 2 |
 | T1082 | System Information Discovery | 1 |
@@ -26,15 +27,17 @@ Total Rules: 5
 |---|---|
 | certutil | 1 |
 | cmd | 2 |
-| command-line | 3 |
-| discovery | 1 |
+| command-line | 4 |
+| discovery | 2 |
 | download | 1 |
 | encoded-command | 1 |
 | execution | 3 |
 | living-off-the-land | 1 |
 | powershell | 3 |
 | reconnaissance | 1 |
-| windows | 5 |
+| reg | 1 |
+| registry | 1 |
+| windows | 6 |
 
 ## Rule Table
 
@@ -45,6 +48,7 @@ Total Rules: 5
 | PT-RULE-003 | Windows Discovery Commands | Medium | T1082 System Information Discovery | discovery, windows, cmd, reconnaissance |
 | PT-RULE-004 | Encoded PowerShell Command | High | T1059.001 PowerShell | powershell, encoded-command, execution, windows, command-line |
 | PT-RULE-005 | Certutil Download Pattern | High | T1105 Ingress Tool Transfer | certutil, download, living-off-the-land, windows, command-line |
+| PT-RULE-006 | Windows Registry Discovery Command | Medium | T1012 Query Registry | registry, discovery, windows, reg, command-line |
 
 ## Rule Details
 
@@ -153,4 +157,26 @@ CommandLineContains:
 
 References:
 - MITRE ATT&CK T1105 - Ingress Tool Transfer
+
+### PT-RULE-006 - Windows Registry Discovery Command
+
+- Severity: Medium
+- MITRE Tactic: Discovery
+- MITRE Technique: T1012 - Query Registry
+- Author: PurpleTrace Lab
+- Created UTC: 2026-06-22T00:00:00Z
+- Tags: registry, discovery, windows, reg, command-line
+- Description: Detects registry query commands commonly used for Windows system or persistence discovery.
+
+ProcessNameContains:
+- `reg.exe`
+
+CommandLineContains:
+- `query`
+- `HKLM`
+- `HKCU`
+- `CurrentVersion\Run`
+
+References:
+- MITRE ATT&CK T1012 - Query Registry
 

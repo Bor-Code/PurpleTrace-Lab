@@ -1,0 +1,19 @@
+{
+  "Source": "Sample",
+  "EventId": 1,
+  "EventType": 1,
+  "Hostname": "BORAN",
+  "UserName": "nonmr",
+  "ProcessId": 8100,
+  "ProcessName": "reg.exe",
+  "ProcessPath": "C:\\Windows\\System32\\reg.exe",
+  "CommandLine": "reg.exe query HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+  "ParentProcessId": 3300,
+  "ParentProcessName": "cmd.exe",
+  "ParentProcessPath": "C:\\Windows\\System32\\cmd.exe",
+  "ParentCommandLine": "cmd.exe",
+  "DestinationIp": "",
+  "DestinationPort": 0,
+  "Protocol": "",
+  "AdditionalData": {}
+}
