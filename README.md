@@ -14,6 +14,63 @@ The project loads endpoint-style events, applies JSON-based detection rules, enr
 
 ---
 
+## Screenshots
+
+### Dashboard Overview
+
+![PurpleTrace Dashboard Overview](docs/assets/A.png)
+
+PurpleTrace Dashboard is a local browser-based interface for reviewing exported alert JSON files. It runs fully locally and does not upload data anywhere.
+
+---
+
+### Detection Metrics and Rule Distribution
+
+![PurpleTrace Dashboard Metrics](docs/assets/B.png)
+
+The dashboard summarizes total alerts, high severity alerts, MITRE technique coverage, detection rule count, severity distribution, MITRE technique distribution, and rule distribution.
+
+---
+
+### Alert Evidence View
+
+![PurpleTrace Alert Evidence View](docs/assets/C.png)
+
+Each alert card shows the rule ID, rule name, severity, MITRE technique, host, user, command line, evidence summary, and rule tags.
+
+---
+
+### High Severity Detection Examples
+
+![PurpleTrace High Severity Detections](docs/assets/D.png)
+
+High severity detections include suspicious PowerShell execution, encoded PowerShell command usage, and certutil download pattern detection.
+
+---
+
+### Command Shell to PowerShell Detection
+
+![PurpleTrace Command Shell PowerShell Detection](docs/assets/E.png)
+
+PurpleTrace can identify command shell activity that starts PowerShell and display the matched evidence used by the rule.
+
+---
+
+### Registry and Rundll32 Detection Examples
+
+![PurpleTrace Registry and Rundll32 Detections](docs/assets/F.png)
+
+The dashboard includes detection examples for Windows registry discovery and Rundll32 URL handler usage with MITRE technique mapping and evidence summaries.
+
+---
+
+### Windows Service Discovery Detection
+
+![PurpleTrace Service Discovery Detection](docs/assets/G.png)
+
+PurpleTrace includes service discovery detection coverage and displays command-line evidence, tags, severity, and MITRE mapping.
+
+
 ## What This Project Demonstrates
 
 PurpleTrace Lab demonstrates practical skills in:
