@@ -352,3 +352,97 @@ samples/sample-investigation-case.md
 ```
 
 This component is designed for defensive alert review and portfolio demonstration.
+
+---
+
+## PurpleTrace Lab v0.2.0
+
+PurpleTrace Lab v0.2.0 turns the project into a more complete defensive detection engineering lab.
+
+The project now includes:
+
+* Safe synthetic telemetry generation
+* JSON-based detection rules
+* MITRE ATT&CK metadata
+* JSON, Markdown, CSV, HTML, summary, and investigation report exports
+* Local browser-based detection dashboard
+* Structured analyst investigation workflow
+* Rule coverage documentation
+* Defensive-only demo flow
+
+Recommended demo flow:
+
+```text
+Simulator -> Agent -> Reports -> Dashboard -> Investigation Report
+```
+
+Generate safe synthetic telemetry:
+
+```powershell
+dotnet run --project src\PurpleTrace.Simulator -- --scenario all --format jsonl --out samples\simulated-events.local.jsonl
+```
+
+Analyze telemetry and generate reports:
+
+```powershell
+dotnet run --project src\PurpleTrace.Agent -- --source sample --rules rules --event samples\simulated-events.local.jsonl --out samples\simulator-alerts.local.json --report samples\simulator-report.local.md --csv samples\simulator-alerts.local.csv --html samples\simulator-report.local.html --summary samples\simulator-summary.local.json --investigation samples\simulator-investigation.local.md
+```
+
+Open the local dashboard:
+
+```powershell
+start dashboard\index.html
+```
+
+Then load:
+
+```text
+samples\simulator-alerts.local.json
+```
+
+Useful documentation:
+
+```text
+docs/demo-guide.md
+docs/v0.2.0-release-notes.md
+docs/investigation-workflow.md
+docs/rule-coverage.md
+docs/simulator.md
+```
+
+---
+
+## Current Capabilities
+
+PurpleTrace Lab currently supports:
+
+* Loading sample endpoint telemetry from JSON and JSONL files
+* Reading Sysmon process creation events on Windows
+* Loading JSON-based detection rules
+* Rule validation
+* Rule catalog listing
+* Rule coverage export
+* Severity filtering
+* MITRE technique filtering
+* Rule ID filtering
+* Rule tag filtering
+* JSON alert export
+* Markdown report export
+* CSV alert export
+* HTML report export
+* JSON run summary export
+* Markdown investigation report export
+* Safe synthetic telemetry simulation
+* Local browser-based dashboard
+* Structured investigation workflow
+
+Current detection coverage includes:
+
+* Suspicious PowerShell execution
+* Command shell started PowerShell
+* Windows discovery commands
+* Encoded PowerShell command
+* Certutil download pattern
+* Registry discovery command
+* Rundll32 URL handler usage
+* Windows service discovery command
