@@ -314,3 +314,41 @@ dotnet run --project src\PurpleTrace.Agent -- --source sample --rules rules --ev
 ```
 
 More details: [PurpleTrace Simulator](docs/simulator.md)
+
+---
+
+## Investigation Workflow
+
+PurpleTrace Lab includes a structured investigation workflow for reviewing detection alerts.
+
+The workflow helps move from raw alert output to analyst-style review by documenting:
+
+* Alert details
+* Rule context
+* MITRE ATT&CK mapping
+* Process evidence
+* Matched fields and matched values
+* Source event review
+* Analyst questions
+* Recommended next steps
+* Final decision
+
+Investigation workflow documentation:
+
+```text
+docs/investigation-workflow.md
+```
+
+Reusable case template:
+
+```text
+templates/investigation-case-template.md
+```
+
+Sample investigation case:
+
+```text
+samples/sample-investigation-case.md
+```
+
+This component is designed for defensive alert review and portfolio demonstration.
